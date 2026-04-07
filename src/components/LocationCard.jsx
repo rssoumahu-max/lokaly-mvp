@@ -54,7 +54,7 @@ export default function LocationCard({
     return `€${isInt ? Math.round(n) : n.toFixed(2).replace(/\.00$/, '')}`;
   };
 
-  const touchActionValue = 'pan-y';
+  const touchActionValue = 'auto';
 
   // ✅ iPhone scroll-klik fix: alleen “echte taps” openen de kaart
   const touchRef = React.useRef({ x: 0, y: 0, moved: false });
