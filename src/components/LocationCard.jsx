@@ -54,10 +54,7 @@ export default function LocationCard({
     return `€${isInt ? Math.round(n) : n.toFixed(2).replace(/\.00$/, '')}`;
   };
 
-  // ✅ Belangrijk: in horizontale carousels op mobiel moet swipen kunnen (pan-x).
-  // forceFullWidthOnMobile = true  → meestal verticale lijst → pan-y is OK
-  const touchActionValue =
-    isMobile && (isTop10Card || !forceFullWidthOnMobile) ? 'pan-x' : 'pan-y';
+  const touchActionValue = 'pan-y';
 
   // ✅ iPhone scroll-klik fix: alleen “echte taps” openen de kaart
   const touchRef = React.useRef({ x: 0, y: 0, moved: false });

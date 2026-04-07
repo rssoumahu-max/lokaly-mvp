@@ -4503,7 +4503,6 @@ function CategoryPage({
       <button
         type="button"
         onMouseDown={(e) => e.preventDefault()}
-        onTouchStart={(e) => e.preventDefault()}
         style={{
           ...pillButtonBase,
           ...(isSelected ? pillActive : {}),
@@ -4529,7 +4528,6 @@ function CategoryPage({
       <button
         type="button"
         onMouseDown={(e) => e.preventDefault()}
-        onTouchStart={(e) => e.preventDefault()}
         style={{
           ...pillButtonBase,
           ...(isSelected ? pillActive : null),
@@ -5819,7 +5817,6 @@ function VibePage({
       <button
         type="button"
         onMouseDown={(e) => e.preventDefault()}
-        onTouchStart={(e) => e.preventDefault()}
         style={{
           ...pillButtonBase,
           ...(isSelected ? pillActive : {}),
@@ -5847,7 +5844,6 @@ function VibePage({
       <button
         type="button"
         onMouseDown={(e) => e.preventDefault()}
-        onTouchStart={(e) => e.preventDefault()}
         style={{
           ...pillButtonBase,
           ...(isSelected ? pillActive : null),
