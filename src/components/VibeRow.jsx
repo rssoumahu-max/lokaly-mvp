@@ -477,7 +477,7 @@ export default function VibeRow({ title, onVibeSelect, onSeeAll, vibes, language
             msOverflowStyle: 'none',
             WebkitOverflowScrolling: 'touch',
             overscrollBehaviorX: 'contain',
-            touchAction: 'pan-x',
+            touchAction: 'pan-y pan-x',
           }}
         >
           {vibeItems

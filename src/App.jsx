@@ -3804,7 +3804,7 @@ function SectionRow({
     scrollbarWidth: 'none',
     msOverflowStyle: 'none',
     WebkitOverflowScrolling: 'touch',
-    touchAction: 'pan-x',
+    touchAction: 'pan-y pan-x',
   };
 
   const divider = {
