@@ -1,5 +1,9 @@
 export function shareLocation(loc, language) {
   if (typeof window === 'undefined') return;
+  if (!loc || !loc.id) {
+    console.warn('shareLocation: location or location.id is missing', loc);
+    return;
+  }
 
   const baseUrl = window.location.origin + window.location.pathname;
   const url = `${baseUrl}?p=detail&loc=${encodeURIComponent(loc.id)}`;
@@ -7,8 +11,8 @@ export function shareLocation(loc, language) {
   if (navigator.share) {
     navigator
       .share({
-        title: loc.name,
-        text: loc.description,
+        title: loc.name || 'Lokaly',
+        text: loc.description || loc.short_description || loc.shortDescription || '',
         url,
       })
       .catch(() => {});

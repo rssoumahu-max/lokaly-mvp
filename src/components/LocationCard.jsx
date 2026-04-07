@@ -70,7 +70,15 @@ export default function LocationCard({
     if (!t) return;
     const dx = Math.abs(t.clientX - touchRef.current.x);
     const dy = Math.abs(t.clientY - touchRef.current.y);
-    if (dx > 8 || dy > 8) touchRef.current.moved = true;
+
+    // Duidelijke drempel: alleen als beweging > 10px EN horizontaal > verticaal
+    if (dx > 10 && dx > dy * 1.5) {
+      touchRef.current.moved = true;
+    } else if (dy > 10 && dy > dx * 1.5) {
+      touchRef.current.moved = true;
+    } else if (dx > 15 || dy > 15) {
+      touchRef.current.moved = true;
+    }
   };
 
   const safeCardOpen = () => {
