@@ -2,7 +2,7 @@ export function shareLocation(loc, language) {
   if (typeof window === 'undefined') return;
 
   const baseUrl = window.location.origin + window.location.pathname;
-  const url = `${baseUrl}?p=home&loc=${encodeURIComponent(loc.id)}`;
+  const url = `${baseUrl}?p=detail&loc=${encodeURIComponent(loc.id)}`;
 
   if (navigator.share) {
     navigator
