@@ -11930,18 +11930,23 @@ function SearchOverlay({
   const isMobile = useIsMobile();
   const t = STRINGS[language];
   const term = searchTerm.trim().toLowerCase();
+  const inputRef = React.useRef(null);
+
   useEffect(() => {
     if (!visible) return;
-
     const onKeyDown = (e) => {
       if (e.key === 'Escape') onClose?.();
     };
-
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [visible, onClose]);
 
-  // kleine helper: kies Supabase-locs als ze er zijn, anders fallback
+  useEffect(() => {
+    if (visible) {
+      setTimeout(() => inputRef.current?.focus(), 60);
+    }
+  }, [visible]);
+
   const sourceLocations =
     locations && locations.length > 0 ? locations : LOCATIONS;
 
@@ -11962,10 +11967,16 @@ function SearchOverlay({
         ).toLowerCase();
         return haystack.includes(term);
       })
-      .slice(0, 8);
+      .slice(0, 10);
   }, [term, sourceLocations]);
 
   const showResults = term.length >= 2 && results.length > 0;
+
+  const ORANGE = 'rgba(255,107,61,1)';
+  const SOFT_TEXT = 'rgba(255,255,255,0.92)';
+  const MUTED_TEXT = 'rgba(255,255,255,0.55)';
+  const FAINT_TEXT = 'rgba(255,255,255,0.38)';
+  const DIVIDER = 'rgba(255,255,255,0.07)';
 
   const highlightMatch = (text) => {
     if (!term) return text;
@@ -11978,270 +11989,388 @@ function SearchOverlay({
     return (
       <>
         {before}
-        <span
-          style={{
-            fontWeight: 700,
-            color: ORANGE,
-          }}
-        >
-          {match}
-        </span>
+        <span style={{ fontWeight: 700, color: ORANGE }}>{match}</span>
         {after}
       </>
     );
   };
 
-  // Lokaly dark tokens (alleen voor de search overlay)
-  const SOFT_TEXT = 'rgba(255,255,255,0.92)';
-  const MUTED_TEXT = 'rgba(255,255,255,0.62)';
-  const FAINT_TEXT = 'rgba(255,255,255,0.42)';
-  const BORDER = 'rgba(255,255,255,0.10)';
-  const DIVIDER = 'rgba(255,255,255,0.08)';
-  const PANEL_BG =
-    'linear-gradient(180deg, rgba(18,20,25,0.96), rgba(8,10,13,0.94))';
-  const RADIUS = '22px 0 22px 0'; // TL + BR rond, rest scherp
-  const RADIUS_SM = '16px 0 16px 0'; // voor input / knoppen
-  const ORANGE = 'rgba(255,107,61,1)';
+  if (!visible) return null;
 
-  const HEADER_H = 64;
-
-  const outerStyle = {
-    position: 'fixed',
-    inset: 0,
-
-    // altijd boven je navbar
-    zIndex: 20000,
-
-    display: visible ? 'flex' : 'none',
-
-    // ✅ zowel desktop als mobile: in het midden
-    justifyContent: 'center',
-    alignItems: 'center',
-
-    // ruimte rondom
-    paddingLeft: 12,
-    paddingRight: 12,
-    paddingBottom: 12,
-
-    // ✅ op mobile geen "header push" meer (maakt 'm lager)
-    paddingTop: 12,
-
-    // Nav “op achtergrond”
-    background: 'rgba(0,0,0,0.55)',
-    backdropFilter: 'blur(12px)',
-    WebkitBackdropFilter: 'blur(12px)',
-  };
-
-  const panelStyle = {
-    width: 'min(760px, calc(100vw - 24px))',
-    borderRadius: 16,
-    border: '1px solid rgba(255,255,255,0.10)',
-    background: 'rgba(10,10,10,0.88)',
-    boxShadow: '0 24px 70px rgba(0,0,0,0.55)',
-    overflow: 'hidden',
-
-    // ✅ hoger in het midden:
-    transform: isMobile ? 'translateY(-48px)' : 'translateY(-70px)',
-  };
-
-  const topRowStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 10,
-    padding: '12px 12px',
-    borderBottom: `1px solid ${DIVIDER}`,
-  };
-
-  const inputWrapperStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 10,
-    flex: 1,
-    padding: '10px 12px',
-    borderRadius: RADIUS_SM,
-    border: `1px solid ${BORDER}`,
-    background: 'rgba(255,255,255,0.06)',
-  };
-
-  const inputStyle = {
-    flex: 1,
-    border: 'none',
-    outline: 'none',
-    background: 'transparent',
-    color: SOFT_TEXT,
-    fontSize: 13.5,
-    fontWeight: 500,
-    letterSpacing: 0.2,
-  };
-
-  const closeButtonStyle = {
-    width: 34,
-    height: 34,
-    borderRadius: RADIUS_SM,
-    border: `1px solid ${BORDER}`,
-    background: 'rgba(255,255,255,0.06)',
-    color: SOFT_TEXT,
-    cursor: 'pointer',
-    fontSize: 18,
-    lineHeight: '18px',
-    display: 'grid',
-    placeItems: 'center',
-  };
-
-  return (
-    <div
-      style={outerStyle}
-      onMouseDown={(e) => {
-        // alleen sluiten als je écht op de backdrop klikt (niet op het panel)
-        if (e.target === e.currentTarget) onClose?.();
-      }}
-    >
-      <div style={panelStyle}>
-        <div style={topRowStyle}>
-          <span
+  if (isMobile) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 20000,
+          background: 'rgba(8,9,12,0.98)',
+          display: 'flex',
+          flexDirection: 'column',
+          overflowY: 'auto',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            padding: '12px 14px',
+            borderBottom: '1px solid rgba(255,255,255,0.08)',
+          }}
+        >
+          <button
+            onClick={onClose}
             style={{
-              fontSize: 12,
-              color: MUTED_TEXT,
-              marginRight: 8,
-              minWidth: 60,
+              width: 38,
+              height: 38,
+              flexShrink: 0,
+              borderRadius: '12px 0 12px 0',
+              border: '1px solid rgba(255,255,255,0.12)',
+              background: 'rgba(255,255,255,0.06)',
+              color: SOFT_TEXT,
+              cursor: 'pointer',
+              display: 'grid',
+              placeItems: 'center',
+              fontSize: 18,
+            }}
+            aria-label={language === 'nl' ? 'Terug' : 'Back'}
+          >
+            ‹
+          </button>
+
+          <div
+            style={{
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              height: 44,
+              padding: '0 14px',
+              borderRadius: '12px 0 12px 0',
+              border: '1px solid rgba(255,255,255,0.14)',
+              background: 'rgba(255,255,255,0.06)',
             }}
           >
-            {t.searchTitle}
-          </span>
-          <div style={inputWrapperStyle}>
-            <span style={{ fontSize: 14, color: MUTED_TEXT }}>
-              <IconSearch />
-            </span>
             <input
-              autoFocus
-              style={inputStyle}
+              ref={inputRef}
+              style={{
+                flex: 1,
+                border: 'none',
+                outline: 'none',
+                background: 'transparent',
+                color: SOFT_TEXT,
+                fontSize: 15,
+                fontFamily: THEME.font,
+                fontWeight: 400,
+              }}
               placeholder={t.searchPlaceholder}
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
             />
+            {searchTerm.length > 0 && (
+              <button
+                onClick={() => onSearchChange('')}
+                style={{
+                  border: 'none',
+                  background: 'none',
+                  color: MUTED_TEXT,
+                  cursor: 'pointer',
+                  fontSize: 18,
+                  lineHeight: 1,
+                  padding: '0 2px',
+                  display: 'grid',
+                  placeItems: 'center',
+                }}
+              >
+                ×
+              </button>
+            )}
           </div>
-          <button style={closeButtonStyle} onClick={onClose}>
-            ×
-          </button>
+
+          <div
+            style={{
+              width: 38,
+              height: 38,
+              flexShrink: 0,
+              borderRadius: '12px 0 12px 0',
+              border: '1px solid rgba(255,255,255,0.12)',
+              background: 'rgba(255,255,255,0.06)',
+              color: MUTED_TEXT,
+              display: 'grid',
+              placeItems: 'center',
+              fontSize: 15,
+            }}
+          >
+            <IconSearch />
+          </div>
         </div>
 
-        <div style={{ maxHeight: 260, overflowY: 'auto' }}>
+        <div style={{ flex: 1 }}>
           {!term && (
             <div
               style={{
-                padding: '8px 12px',
-                fontSize: 12,
-                color: '#9ca3af',
+                padding: '22px 20px 10px',
+                fontFamily: THEME.font,
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: 0.8,
+                textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.35)',
               }}
             >
-              {t.typeToSearch}
+              {language === 'nl' ? 'Suggesties' : 'Suggestions'}
             </div>
           )}
 
           {term && !showResults && (
             <div
               style={{
-                padding: '8px 12px',
-                fontSize: 12,
-                color: '#9ca3af',
+                padding: '28px 20px',
+                textAlign: 'center',
+                fontFamily: THEME.font,
+                fontSize: 14,
+                color: MUTED_TEXT,
               }}
             >
               {t.searchNoResults}
             </div>
           )}
 
-          {showResults &&
-            results.map((loc) => (
+          {(showResults ? results : sourceLocations.slice(0, 10)).map((loc) => (
+            <button
+              key={loc.id}
+              onClick={() => onSelect(loc)}
+              style={{
+                width: '100%',
+                textAlign: 'left',
+                padding: '14px 20px',
+                border: 'none',
+                borderBottom: `1px solid ${DIVIDER}`,
+                background: 'transparent',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 14,
+              }}
+            >
+              <span
+                style={{
+                  width: 32,
+                  height: 32,
+                  flexShrink: 0,
+                  borderRadius: '10px 0 10px 0',
+                  border: '1px solid rgba(255,255,255,0.10)',
+                  background: 'rgba(255,255,255,0.05)',
+                  display: 'grid',
+                  placeItems: 'center',
+                  color: MUTED_TEXT,
+                  fontSize: 13,
+                }}
+              >
+                <IconSearch />
+              </span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div
+                  style={{
+                    fontFamily: THEME.font,
+                    fontSize: 14,
+                    fontWeight: 500,
+                    color: SOFT_TEXT,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {showResults ? highlightMatch(loc.name || '') : loc.name}
+                </div>
+                {(loc.district || loc.type) && (
+                  <div
+                    style={{
+                      fontFamily: THEME.font,
+                      fontSize: 12,
+                      color: FAINT_TEXT,
+                      marginTop: 2,
+                    }}
+                  >
+                    {[loc.district, loc.type].filter(Boolean).join(' · ')}
+                  </div>
+                )}
+              </div>
+              <span
+                style={{
+                  color: FAINT_TEXT,
+                  fontSize: 16,
+                  flexShrink: 0,
+                  transform: 'rotate(-45deg)',
+                  display: 'inline-block',
+                }}
+              >
+                ↗
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 19999,
+      }}
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose?.();
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.38)',
+          backdropFilter: 'blur(4px)',
+          WebkitBackdropFilter: 'blur(4px)',
+        }}
+        onMouseDown={onClose}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          top: 62,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: 'min(640px, calc(100vw - 48px))',
+          zIndex: 1,
+        }}
+      >
+        <div
+          style={{
+            background: 'rgba(10,11,14,0.97)',
+            borderRadius: '0 0 18px 18px',
+            border: '1px solid rgba(255,255,255,0.10)',
+            borderTop: 'none',
+            boxShadow: '0 24px 60px rgba(0,0,0,0.60)',
+            overflow: 'hidden',
+          }}
+        >
+          {!term && (
+            <div
+              style={{
+                padding: '10px 16px 6px',
+                fontFamily: THEME.font,
+                fontSize: 10.5,
+                fontWeight: 700,
+                letterSpacing: 0.9,
+                textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.32)',
+              }}
+            >
+              {language === 'nl' ? 'Suggesties' : 'Suggestions'}
+            </div>
+          )}
+
+          {term && !showResults && (
+            <div
+              style={{
+                padding: '16px',
+                fontFamily: THEME.font,
+                fontSize: 13,
+                color: MUTED_TEXT,
+              }}
+            >
+              {t.searchNoResults}
+            </div>
+          )}
+
+          <div style={{ maxHeight: 380, overflowY: 'auto' }}>
+            {(showResults ? results : sourceLocations.slice(0, 10)).map((loc, i) => (
               <button
                 key={loc.id}
                 onClick={() => onSelect(loc)}
                 style={{
                   width: '100%',
                   textAlign: 'left',
-                  padding: '10px 12px',
+                  padding: '12px 18px',
                   border: 'none',
-                  borderBottom: `1px solid ${DIVIDER}`,
+                  borderBottom: i < (showResults ? results : sourceLocations.slice(0, 10)).length - 1
+                    ? `1px solid ${DIVIDER}`
+                    : 'none',
                   background: 'transparent',
                   cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 14,
+                  transition: 'background 120ms ease',
                 }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
               >
-                <div
+                <span
                   style={{
-                    fontWeight: 600,
-                    marginBottom: 2,
-                    color: SOFT_TEXT,
+                    width: 30,
+                    height: 30,
+                    flexShrink: 0,
+                    borderRadius: '9px 0 9px 0',
+                    border: '1px solid rgba(255,255,255,0.09)',
+                    background: 'rgba(255,255,255,0.04)',
+                    display: 'grid',
+                    placeItems: 'center',
+                    color: MUTED_TEXT,
+                    fontSize: 12,
                   }}
                 >
-                  {highlightMatch(loc.name || '')}
-                </div>
+                  <IconSearch />
+                </span>
 
-                {/* regel met stadsdeel / rating / type, veilig opgebouwd */}
-                <div
-                  style={{
-                    fontSize: 11,
-                    color: THEME.muted,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    flexWrap: 'wrap',
-                  }}
-                >
-                  <span
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div
                     style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 6,
+                      fontFamily: THEME.font,
+                      fontSize: 14,
+                      fontWeight: 500,
+                      color: SOFT_TEXT,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
                     }}
                   >
-                    <IconPin size={14} />
-                    {loc.district || 'Amsterdam'}
-                  </span>
-
-                  {typeof loc.rating === 'number' &&
-                    !Number.isNaN(loc.rating) && (
-                      <span
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: 6,
-                        }}
-                      >
-                        <span style={{ opacity: 0.7 }}>·</span>
-                        {loc.rating.toFixed(1)}
-                      </span>
-                    )}
-
-                  {loc.type && (
-                    <span
+                    {showResults ? highlightMatch(loc.name || '') : loc.name}
+                  </div>
+                  {(loc.district || loc.type) && (
+                    <div
                       style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: 6,
+                        fontFamily: THEME.font,
+                        fontSize: 12,
+                        color: FAINT_TEXT,
+                        marginTop: 2,
                       }}
                     >
-                      <span style={{ opacity: 0.7 }}>·</span>
-                      {loc.type}
-                    </span>
+                      {[loc.district, loc.type].filter(Boolean).join(' · ')}
+                    </div>
                   )}
                 </div>
 
-                {/* korte beschrijving eronder */}
-                {loc.description && (
-                  <div
-                    style={{
-                      fontSize: 11,
-                      color: FAINT_TEXT,
-                      marginTop: 2,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {loc.description}
-                  </div>
-                )}
+                <span
+                  style={{
+                    color: FAINT_TEXT,
+                    fontSize: 15,
+                    flexShrink: 0,
+                    transform: 'rotate(-45deg)',
+                    display: 'inline-block',
+                    opacity: 0.7,
+                  }}
+                >
+                  ↗
+                </span>
               </button>
             ))}
+          </div>
         </div>
       </div>
     </div>

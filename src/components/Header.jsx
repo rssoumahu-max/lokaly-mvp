@@ -138,21 +138,22 @@ export default function Header({
     color: THEME.orange, // of THEME.accent als jij die gebruikt voor oranje
   };
 
-  // Searchbar wrapper (zoals screenshot)
   const searchWrapStyle = {
-    flex: 0.9,
-    maxWidth: 520,
+    flex: 1,
+    maxWidth: 560,
     display: 'flex',
     alignItems: 'center',
     gap: 10,
-    padding: isMobile ? '10px 12px' : '10px 14px',
-    borderRadius: isMobile ? '10px 0 10px 0' : '12px 0 12px 0',
+    height: 42,
+    padding: '0 14px',
+    borderRadius: '22px',
     border: navIsDark
       ? '1px solid rgba(255,255,255,0.14)'
       : `1px solid ${THEME.border}`,
-    background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.92)',
+    background: navIsDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.92)',
     color: navIsDark ? 'rgba(255,255,255,0.92)' : THEME.text,
-    boxShadow: navIsDark ? 'none' : '0 12px 30px rgba(15,23,42,0.08)',
+    boxShadow: navIsDark ? 'none' : '0 2px 16px rgba(15,23,42,0.06)',
+    cursor: 'text',
   };
 
   const searchInputInnerStyle = {
@@ -161,7 +162,9 @@ export default function Header({
     outline: 'none',
     background: 'transparent',
     color: navIsDark ? 'rgba(255,255,255,0.92)' : THEME.text,
-    fontSize: 13,
+    fontSize: 14,
+    fontFamily: THEME.font,
+    fontWeight: 400,
   };
 
   // Pill buttons (zoals screenshot, maar Lokaly-oranje accent)
@@ -300,9 +303,10 @@ export default function Header({
       <span
         style={{
           fontSize: 14,
-          color: navIsDark ? 'rgba(255,255,255,0.55)' : THEME.muted,
+          color: navIsDark ? 'rgba(255,255,255,0.45)' : THEME.muted,
           display: 'inline-flex',
           alignItems: 'center',
+          flexShrink: 0,
         }}
       >
         <IconSearch />
@@ -317,6 +321,22 @@ export default function Header({
           if (e.key === 'Escape') onSearchClose?.();
         }}
       />
+      <span
+        style={{
+          flexShrink: 0,
+          width: 28,
+          height: 28,
+          borderRadius: '50%',
+          background: navIsDark ? 'rgba(255,107,61,0.18)' : 'rgba(255,107,61,0.12)',
+          border: '1px solid rgba(255,107,61,0.30)',
+          display: 'grid',
+          placeItems: 'center',
+          fontSize: 13,
+          color: 'rgba(255,107,61,0.90)',
+        }}
+      >
+        <IconSearch />
+      </span>
     </div>
   );
 
@@ -559,9 +579,6 @@ export default function Header({
           </nav>
         </div>
 
-        {isMobile && mobileSearchOpen && (
-          <div style={{ marginTop: 8 }}>{renderSearchInput()}</div>
-        )}
       </header>
 
       {isMobile && mobileMenuOpen && (
