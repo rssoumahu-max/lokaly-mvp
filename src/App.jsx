@@ -12215,46 +12215,111 @@ function SearchOverlay({
     );
   }
 
+  const suggestList = showResults ? results : sourceLocations.slice(0, 10);
+
   return (
     <div
       style={{
         position: 'fixed',
         inset: 0,
-        zIndex: 19999,
-      }}
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) onClose?.();
+        zIndex: 20000,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        paddingTop: 16,
       }}
     >
       <div
         style={{
           position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'rgba(0,0,0,0.38)',
-          backdropFilter: 'blur(4px)',
-          WebkitBackdropFilter: 'blur(4px)',
+          inset: 0,
+          background: 'rgba(0,0,0,0.50)',
+          backdropFilter: 'blur(6px)',
+          WebkitBackdropFilter: 'blur(6px)',
         }}
         onMouseDown={onClose}
       />
+
       <div
         style={{
-          position: 'absolute',
-          top: 62,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: 'min(640px, calc(100vw - 48px))',
+          position: 'relative',
           zIndex: 1,
+          width: 'min(620px, calc(100vw - 40px))',
         }}
       >
         <div
           style={{
-            background: 'rgba(10,11,14,0.97)',
-            borderRadius: '0 0 18px 18px',
-            border: '1px solid rgba(255,255,255,0.10)',
-            borderTop: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            height: 52,
+            padding: '0 16px',
+            borderRadius: '18px 0 0 0',
+            background: 'rgba(10,11,14,0.98)',
+            border: '1px solid rgba(255,255,255,0.14)',
+            borderBottom: 'none',
+            boxShadow: '0 -4px 20px rgba(0,0,0,0.30)',
+          }}
+        >
+          <input
+            ref={inputRef}
+            style={{
+              flex: 1,
+              border: 'none',
+              outline: 'none',
+              background: 'transparent',
+              color: SOFT_TEXT,
+              fontSize: 15,
+              fontFamily: THEME.font,
+              fontWeight: 400,
+            }}
+            placeholder={t.searchPlaceholder}
+            value={searchTerm}
+            onChange={(e) => onSearchChange(e.target.value)}
+          />
+          {searchTerm.length > 0 && (
+            <button
+              onClick={() => onSearchChange('')}
+              style={{
+                border: 'none',
+                background: 'none',
+                color: MUTED_TEXT,
+                cursor: 'pointer',
+                fontSize: 18,
+                lineHeight: 1,
+                padding: '0 4px',
+                display: 'grid',
+                placeItems: 'center',
+                flexShrink: 0,
+              }}
+            >
+              ×
+            </button>
+          )}
+          <span
+            style={{
+              flexShrink: 0,
+              width: 32,
+              height: 32,
+              borderRadius: '50%',
+              background: 'rgba(255,107,61,0.15)',
+              border: '1px solid rgba(255,107,61,0.28)',
+              display: 'grid',
+              placeItems: 'center',
+              fontSize: 14,
+              color: 'rgba(255,107,61,0.90)',
+            }}
+          >
+            <IconSearch />
+          </span>
+        </div>
+
+        <div
+          style={{
+            background: 'rgba(10,11,14,0.98)',
+            borderRadius: '0 0 18px 0',
+            border: '1px solid rgba(255,255,255,0.14)',
+            borderTop: '1px solid rgba(255,255,255,0.07)',
             boxShadow: '0 24px 60px rgba(0,0,0,0.60)',
             overflow: 'hidden',
           }}
@@ -12262,13 +12327,13 @@ function SearchOverlay({
           {!term && (
             <div
               style={{
-                padding: '10px 16px 6px',
+                padding: '10px 18px 6px',
                 fontFamily: THEME.font,
                 fontSize: 10.5,
                 fontWeight: 700,
                 letterSpacing: 0.9,
                 textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.32)',
+                color: 'rgba(255,255,255,0.30)',
               }}
             >
               {language === 'nl' ? 'Suggesties' : 'Suggestions'}
@@ -12278,7 +12343,7 @@ function SearchOverlay({
           {term && !showResults && (
             <div
               style={{
-                padding: '16px',
+                padding: '18px',
                 fontFamily: THEME.font,
                 fontSize: 13,
                 color: MUTED_TEXT,
@@ -12288,8 +12353,8 @@ function SearchOverlay({
             </div>
           )}
 
-          <div style={{ maxHeight: 380, overflowY: 'auto' }}>
-            {(showResults ? results : sourceLocations.slice(0, 10)).map((loc, i) => (
+          <div style={{ maxHeight: 360, overflowY: 'auto' }}>
+            {suggestList.map((loc, i) => (
               <button
                 key={loc.id}
                 onClick={() => onSelect(loc)}
@@ -12298,7 +12363,7 @@ function SearchOverlay({
                   textAlign: 'left',
                   padding: '12px 18px',
                   border: 'none',
-                  borderBottom: i < (showResults ? results : sourceLocations.slice(0, 10)).length - 1
+                  borderBottom: i < suggestList.length - 1
                     ? `1px solid ${DIVIDER}`
                     : 'none',
                   background: 'transparent',
@@ -12327,7 +12392,6 @@ function SearchOverlay({
                 >
                   <IconSearch />
                 </span>
-
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div
                     style={{
@@ -12355,7 +12419,6 @@ function SearchOverlay({
                     </div>
                   )}
                 </div>
-
                 <span
                   style={{
                     color: FAINT_TEXT,

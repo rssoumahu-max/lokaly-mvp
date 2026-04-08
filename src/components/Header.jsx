@@ -138,7 +138,7 @@ export default function Header({
     color: THEME.orange, // of THEME.accent als jij die gebruikt voor oranje
   };
 
-  const searchWrapStyle = {
+  const searchTriggerStyle = {
     flex: 1,
     maxWidth: 560,
     display: 'flex',
@@ -146,25 +146,14 @@ export default function Header({
     gap: 10,
     height: 42,
     padding: '0 14px',
-    borderRadius: '22px',
+    borderRadius: '18px 0 0 0',
     border: navIsDark
       ? '1px solid rgba(255,255,255,0.14)'
       : `1px solid ${THEME.border}`,
     background: navIsDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.92)',
-    color: navIsDark ? 'rgba(255,255,255,0.92)' : THEME.text,
-    boxShadow: navIsDark ? 'none' : '0 2px 16px rgba(15,23,42,0.06)',
+    color: navIsDark ? 'rgba(255,255,255,0.55)' : THEME.muted,
     cursor: 'text',
-  };
-
-  const searchInputInnerStyle = {
-    flex: 1,
-    border: 'none',
-    outline: 'none',
-    background: 'transparent',
-    color: navIsDark ? 'rgba(255,255,255,0.92)' : THEME.text,
-    fontSize: 14,
-    fontFamily: THEME.font,
-    fontWeight: 400,
+    userSelect: 'none',
   };
 
   // Pill buttons (zoals screenshot, maar Lokaly-oranje accent)
@@ -298,41 +287,38 @@ export default function Header({
     lineHeight: '16px',
   };
 
-  const renderSearchInput = (styleOverrides = {}) => (
-    <div style={{ ...searchWrapStyle, ...styleOverrides }}>
+  const renderSearchTrigger = () => (
+    <div
+      style={searchTriggerStyle}
+      onClick={() => onSearchOpen?.()}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onSearchOpen?.(); }}
+    >
       <span
         style={{
+          flex: 1,
           fontSize: 14,
+          fontFamily: THEME.font,
           color: navIsDark ? 'rgba(255,255,255,0.45)' : THEME.muted,
-          display: 'inline-flex',
-          alignItems: 'center',
-          flexShrink: 0,
+          pointerEvents: 'none',
         }}
       >
-        <IconSearch />
+        {searchTerm || t.searchPlaceholder}
       </span>
-      <input
-        style={searchInputInnerStyle}
-        placeholder={t.searchPlaceholder}
-        value={searchTerm}
-        onChange={(e) => onSearchChange(e.target.value)}
-        onFocus={() => onSearchOpen?.()}
-        onKeyDown={(e) => {
-          if (e.key === 'Escape') onSearchClose?.();
-        }}
-      />
       <span
         style={{
           flexShrink: 0,
-          width: 28,
-          height: 28,
+          width: 30,
+          height: 30,
           borderRadius: '50%',
-          background: navIsDark ? 'rgba(255,107,61,0.18)' : 'rgba(255,107,61,0.12)',
-          border: '1px solid rgba(255,107,61,0.30)',
+          background: navIsDark ? 'rgba(255,107,61,0.15)' : 'rgba(255,107,61,0.10)',
+          border: '1px solid rgba(255,107,61,0.28)',
           display: 'grid',
           placeItems: 'center',
-          fontSize: 13,
+          fontSize: 14,
           color: 'rgba(255,107,61,0.90)',
+          pointerEvents: 'none',
         }}
       >
         <IconSearch />
@@ -444,7 +430,7 @@ export default function Header({
             Lokaly.
           </span>
 
-          {!isMobile && renderSearchInput()}
+          {!isMobile && renderSearchTrigger()}
 
           <nav style={navStyle}>
             {isMobile && (
