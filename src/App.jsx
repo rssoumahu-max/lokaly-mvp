@@ -15993,6 +15993,10 @@ function AccountPage({
   const avatarFileRef = React.useRef(null);
   const [avatarUploading, setAvatarUploading] = React.useState(false);
 
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
+  const [deletingAccount, setDeletingAccount] = React.useState(false);
+  const [deleteError, setDeleteError] = React.useState('');
+
   const [openKey, setOpenKey] = React.useState(null);
   React.useEffect(() => {
     if (openKey === 'myreviews') {
@@ -16391,6 +16395,24 @@ function AccountPage({
       );
     } finally {
       setLoadingAuth(false);
+    }
+  }
+
+  async function handleDeleteAccount() {
+    setDeletingAccount(true);
+    setDeleteError('');
+    try {
+      const { error: fnError } = await supabase.functions.invoke('delete-account');
+      if (fnError) throw fnError;
+      await supabase.auth.signOut();
+    } catch (err) {
+      setDeleteError(
+        err.message ||
+          (language === 'nl'
+            ? 'Account verwijderen mislukt, probeer opnieuw.'
+            : 'Account deletion failed, please try again.')
+      );
+      setDeletingAccount(false);
     }
   }
 
@@ -17548,6 +17570,147 @@ function AccountPage({
             : 'Log out'}
         </button>
       </div>
+
+      <div style={{ marginTop: 10 }}>
+        <button
+          type="button"
+          onClick={() => { setDeleteConfirmOpen(true); setDeleteError(''); }}
+          disabled={loadingAuth || deletingAccount}
+          style={{
+            ...btnGhost,
+            width: '100%',
+            padding: '12px 14px',
+            borderRadius: 18,
+            background: 'transparent',
+            border: '1px solid rgba(220,38,38,0.30)',
+            color: 'rgba(220,38,38,0.85)',
+            opacity: (loadingAuth || deletingAccount) ? 0.5 : 1,
+          }}
+        >
+          {language === 'nl' ? 'Account verwijderen' : 'Delete account'}
+        </button>
+      </div>
+
+      {deleteConfirmOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '0 20px',
+            background: 'rgba(0,0,0,0.55)',
+            backdropFilter: 'blur(4px)',
+          }}
+          onClick={(e) => { if (e.target === e.currentTarget && !deletingAccount) setDeleteConfirmOpen(false); }}
+        >
+          <div
+            style={{
+              background: 'var(--lokaly-surface)',
+              borderRadius: 22,
+              padding: '28px 24px 24px',
+              maxWidth: 380,
+              width: '100%',
+              boxShadow: '0 24px 80px rgba(0,0,0,0.22)',
+              border: '1px solid var(--lokaly-border)',
+            }}
+          >
+            <div style={{ marginBottom: 16, textAlign: 'center' }}>
+              <div style={{
+                width: 48,
+                height: 48,
+                borderRadius: '50%',
+                background: 'rgba(220,38,38,0.10)',
+                border: '1px solid rgba(220,38,38,0.22)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 14px',
+                fontSize: 22,
+              }}>
+                ⚠
+              </div>
+              <h3 style={{
+                fontFamily: 'var(--lokaly-font)',
+                fontSize: 17,
+                fontWeight: 700,
+                color: 'var(--lokaly-text)',
+                margin: '0 0 10px',
+              }}>
+                {language === 'nl' ? 'Account verwijderen?' : 'Delete account?'}
+              </h3>
+              <p style={{
+                fontFamily: 'var(--lokaly-font)',
+                fontSize: 14,
+                lineHeight: 1.55,
+                color: 'var(--lokaly-muted)',
+                margin: 0,
+              }}>
+                {language === 'nl'
+                  ? 'Dit verwijdert je account en alle bijbehorende gegevens permanent. Deze actie kan niet ongedaan worden gemaakt.'
+                  : 'This will permanently delete your account and all associated data. This action cannot be undone.'}
+              </p>
+            </div>
+
+            {deleteError ? (
+              <div style={{
+                background: 'rgba(220,38,38,0.08)',
+                border: '1px solid rgba(220,38,38,0.25)',
+                borderRadius: 12,
+                padding: '10px 12px',
+                marginBottom: 14,
+                fontFamily: 'var(--lokaly-font)',
+                fontSize: 13,
+                color: 'rgb(220,38,38)',
+              }}>
+                {deleteError}
+              </div>
+            ) : null}
+
+            <div style={{ display: 'flex', gap: 10, flexDirection: 'column' }}>
+              <button
+                type="button"
+                onClick={handleDeleteAccount}
+                disabled={deletingAccount}
+                style={{
+                  width: '100%',
+                  padding: '12px 14px',
+                  borderRadius: 14,
+                  border: '1px solid rgba(220,38,38,0.35)',
+                  background: 'rgba(220,38,38,0.09)',
+                  color: 'rgb(200,30,30)',
+                  fontFamily: 'var(--lokaly-font)',
+                  fontSize: 14,
+                  fontWeight: 700,
+                  cursor: deletingAccount ? 'not-allowed' : 'pointer',
+                  opacity: deletingAccount ? 0.6 : 1,
+                }}
+              >
+                {deletingAccount
+                  ? (language === 'nl' ? 'Bezig…' : 'Working…')
+                  : (language === 'nl' ? 'Ja, verwijder mijn account' : 'Yes, delete my account')}
+              </button>
+              <button
+                type="button"
+                onClick={() => { setDeleteConfirmOpen(false); setDeleteError(''); }}
+                disabled={deletingAccount}
+                style={{
+                  ...btnGhost,
+                  width: '100%',
+                  padding: '12px 14px',
+                  borderRadius: 14,
+                  background: 'rgba(15,23,42,0.04)',
+                  opacity: deletingAccount ? 0.5 : 1,
+                }}
+              >
+                {language === 'nl' ? 'Annuleren' : 'Cancel'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
