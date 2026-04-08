@@ -215,7 +215,6 @@ export default function HeroCard({ location, onOpen, language }) {
 
         <div style={bottomDock}>
           <h2 style={titleStyle}>{location?.name}</h2>
-          {heroDesc ? <p style={descStyle}>{heroDesc}</p> : null}
 
           <div style={metaRow}>
             <div style={leftMeta}>
@@ -318,7 +317,6 @@ export default function HeroCard({ location, onOpen, language }) {
 
       <div style={contentWrap}>
         <h1 style={titleStyleDesktop}>{location?.name}</h1>
-        {heroDesc ? <p style={descStyleDesktop}>{heroDesc}</p> : null}
 
         <div style={metaRowDesktop}>
           {districtName ? (
