@@ -2358,7 +2358,7 @@ function LocationModal({
             onClick={() => {
               track({
                 event_name: 'website_click',
-                page: pageState,
+                page: 'detail',
                 location_id: location?.id ?? null,
                 user_id: user?.id || null,
                 meta: { source: 'detail_page' },
@@ -2425,7 +2425,7 @@ function LocationModal({
               e.stopPropagation();
               track({
                 event_name: 'share_click',
-                page: pageState,
+                page: 'detail',
                 location_id: location?.id ?? null,
                 user_id: user?.id || null,
               });
@@ -10480,7 +10480,7 @@ function AdminDashboard({
 
                             track({
                               event_name: 'website_click',
-                              page: pageState,
+                              page: 'detail',
                               meta: { source: 'detail_page' },
                               user_id: user?.id || null,
                               // location_id: selectedLocation?.id || null,
