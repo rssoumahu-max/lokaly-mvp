@@ -312,12 +312,12 @@ export default function Header({
           width: 30,
           height: 30,
           borderRadius: '50%',
-          background: navIsDark ? 'rgba(255,107,61,0.15)' : 'rgba(255,107,61,0.10)',
-          border: '1px solid rgba(255,107,61,0.28)',
+          background: 'transparent',
+          border: 'none',
           display: 'grid',
           placeItems: 'center',
-          fontSize: 14,
-          color: 'rgba(255,107,61,0.90)',
+          fontSize: 16,
+          color: navIsDark ? 'rgba(255,255,255,0.45)' : 'rgba(60,60,60,0.45)',
           pointerEvents: 'none',
         }}
       >

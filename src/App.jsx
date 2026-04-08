@@ -12254,7 +12254,7 @@ function SearchOverlay({
             gap: 10,
             height: 52,
             padding: '0 16px',
-            borderRadius: '12px 0 12px 0',
+            borderRadius: '12px 0 0 0',
             background: 'rgba(10,11,14,0.98)',
             border: '1px solid rgba(255,255,255,0.14)',
             borderBottom: 'none',
@@ -12302,12 +12302,12 @@ function SearchOverlay({
               width: 32,
               height: 32,
               borderRadius: '50%',
-              background: 'rgba(255,107,61,0.15)',
-              border: '1px solid rgba(255,107,61,0.28)',
+              background: 'transparent',
+              border: 'none',
               display: 'grid',
               placeItems: 'center',
-              fontSize: 14,
-              color: 'rgba(255,107,61,0.90)',
+              fontSize: 16,
+              color: 'rgba(255,255,255,0.45)',
             }}
           >
             <IconSearch />
