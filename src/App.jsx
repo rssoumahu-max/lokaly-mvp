@@ -12254,7 +12254,7 @@ function SearchOverlay({
             gap: 10,
             height: 52,
             padding: '0 16px',
-            borderRadius: '18px 0 0 0',
+            borderRadius: '12px 0 12px 0',
             background: 'rgba(10,11,14,0.98)',
             border: '1px solid rgba(255,255,255,0.14)',
             borderBottom: 'none',
@@ -12317,7 +12317,7 @@ function SearchOverlay({
         <div
           style={{
             background: 'rgba(10,11,14,0.98)',
-            borderRadius: '0 0 18px 0',
+            borderRadius: '0 0 12px 0',
             border: '1px solid rgba(255,255,255,0.14)',
             borderTop: '1px solid rgba(255,255,255,0.07)',
             boxShadow: '0 24px 60px rgba(0,0,0,0.60)',

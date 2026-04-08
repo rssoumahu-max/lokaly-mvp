@@ -146,7 +146,7 @@ export default function Header({
     gap: 10,
     height: 42,
     padding: '0 14px',
-    borderRadius: '18px 0 0 0',
+    borderRadius: '12px 0 12px 0',
     border: navIsDark
       ? '1px solid rgba(255,255,255,0.14)'
       : `1px solid ${THEME.border}`,
