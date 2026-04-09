@@ -404,7 +404,7 @@ function LocationModal({
     fontWeight: 400,
     lineHeight: 1.5,
     color: 'rgba(225,230,240,0.78)',
-    maxWidth: 760,
+    maxWidth: isMobile ? 760 : '100%',
   };
 
   const detailMetaPill = {
