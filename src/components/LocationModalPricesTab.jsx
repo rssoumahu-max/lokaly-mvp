@@ -2,12 +2,53 @@ import React from 'react';
 
 export default function LocationModalPricesTab({ language, THEME, location }) {
   const fmtMoney = (n) => {
-    const v = Number(n);
-    if (!Number.isFinite(v)) return null;
+    const str = String(n ?? '').trim().replace(',', '.');
+    const v = Number(str);
+    if (!Number.isFinite(v) || str === '') return null;
     return `€${(Math.round(v * 100) / 100).toFixed(2).replace('.00', '')}`;
   };
 
   const priceNote = (location?.priceNote || '').trim();
+
+  const rawItems = Array.isArray(location?.priceItems) ? location.priceItems : [];
+
+  const rows = rawItems.map((item, i) => {
+    const title =
+      (item?.title || item?.label || item?.name || '').trim() ||
+      (language === 'nl' ? `Item ${i + 1}` : `Item ${i + 1}`);
+
+    const note = (item?.note || item?.description || '').trim() || '';
+    const unit = (item?.unit || '').trim();
+    const type = (item?.type || 'fixed').trim();
+
+    let right = '';
+
+    if (type === 'range') {
+      const minFmt = fmtMoney(item?.min);
+      const maxFmt = fmtMoney(item?.max);
+      if (minFmt && maxFmt) {
+        right = `${minFmt} – ${maxFmt}`;
+      } else if (minFmt) {
+        right = language === 'nl' ? `Vanaf ${minFmt}` : `From ${minFmt}`;
+      } else if (maxFmt) {
+        right = `t/m ${maxFmt}`;
+      }
+    } else {
+      if (item?.price != null && fmtMoney(item.price)) {
+        right = fmtMoney(item.price);
+      } else if (item?.amount != null && String(item.amount).trim()) {
+        right = fmtMoney(item.amount) || String(item.amount).trim();
+      } else if (item?.value != null && String(item.value).trim()) {
+        right = fmtMoney(item.value) || String(item.value).trim();
+      }
+    }
+
+    if (right && unit) {
+      right = `${right} ${unit}`;
+    }
+
+    return { title, note, right };
+  }).filter((r) => r.title && r.right);
 
   let indication = language === 'nl' ? 'Prijs varieert' : 'Price varies';
 
@@ -19,9 +60,7 @@ export default function LocationModalPricesTab({ language, THEME, location }) {
     Number(location?.priceMin) > 0 &&
     Number(location?.priceMax) > 0
   ) {
-    indication = `${fmtMoney(location.priceMin)} – ${fmtMoney(
-      location.priceMax
-    )}`;
+    indication = `${fmtMoney(location.priceMin)} – ${fmtMoney(location.priceMax)}`;
   } else if (
     Number.isFinite(Number(location?.priceMin)) &&
     Number(location?.priceMin) > 0
@@ -30,38 +69,27 @@ export default function LocationModalPricesTab({ language, THEME, location }) {
       language === 'nl'
         ? `Vanaf ${fmtMoney(location.priceMin)}`
         : `From ${fmtMoney(location.priceMin)}`;
-  } else if (
-    typeof location?.priceLevel === 'string' &&
-    location.priceLevel.trim()
-  ) {
+  } else if (rows.length > 0) {
+    const allRights = rows.map((r) => r.right);
+    const allAmounts = rows.flatMap((r) => {
+      const parts = r.right.replace(/[€]/g, '').split('–').map((s) => {
+        const n = Number(s.trim().split(' ')[0].replace(',', '.'));
+        return Number.isFinite(n) ? n : null;
+      }).filter((n) => n !== null);
+      return parts;
+    });
+    if (allAmounts.length > 0) {
+      const lo = Math.min(...allAmounts);
+      const hi = Math.max(...allAmounts);
+      if (lo === hi) {
+        indication = `${fmtMoney(lo)}`;
+      } else {
+        indication = `${fmtMoney(lo)} – ${fmtMoney(hi)}`;
+      }
+    }
+  } else if (typeof location?.priceLevel === 'string' && location.priceLevel.trim()) {
     indication = location.priceLevel.trim();
   }
-
-  const rawItems = Array.isArray(location?.priceItems)
-    ? location.priceItems
-    : [];
-
-  const rows = rawItems
-    .map((item, i) => {
-      const title =
-        (item?.title || item?.label || item?.name || '').trim() ||
-        (language === 'nl' ? `Item ${i + 1}` : `Item ${i + 1}`);
-
-      const note = (item?.note || item?.description || '').trim() || '';
-
-      let right = '';
-
-      if (item?.price != null && Number.isFinite(Number(item.price))) {
-        right = fmtMoney(item.price) || '';
-      } else if (item?.value != null && String(item.value).trim()) {
-        right = String(item.value).trim();
-      } else if (item?.amount != null && String(item.amount).trim()) {
-        right = String(item.amount).trim();
-      }
-
-      return { title, note, right };
-    })
-    .filter((r) => r.title && r.right);
 
   return (
     <div
@@ -95,7 +123,6 @@ export default function LocationModalPricesTab({ language, THEME, location }) {
           {language === 'nl' ? 'Prijzen' : 'Prices'}
         </h3>
 
-        {/* Indicatie */}
         <div
           style={{
             marginTop: 8,
@@ -116,7 +143,6 @@ export default function LocationModalPricesTab({ language, THEME, location }) {
           </span>
         </div>
 
-        {/* Algemene admin-beschrijving eerst */}
         {!!priceNote && (
           <div
             style={{
@@ -133,7 +159,6 @@ export default function LocationModalPricesTab({ language, THEME, location }) {
           </div>
         )}
 
-        {/* Alleen concrete prijsregels tonen als ze echt een waarde hebben */}
         {rows.length > 0 && (
           <div style={{ marginTop: 12, display: 'grid', gap: 10 }}>
             {rows.map((r, idx) => (
@@ -141,7 +166,7 @@ export default function LocationModalPricesTab({ language, THEME, location }) {
                 key={idx}
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: '1fr 160px',
+                  gridTemplateColumns: '1fr auto',
                   gap: 12,
                   alignItems: 'center',
                   padding: '11px 13px',
@@ -180,6 +205,7 @@ export default function LocationModalPricesTab({ language, THEME, location }) {
                     fontWeight: 500,
                     color: 'rgba(235,240,255,0.74)',
                     textAlign: 'right',
+                    whiteSpace: 'nowrap',
                   }}
                 >
                   {r.right}
