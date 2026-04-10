@@ -20,6 +20,7 @@ export default function LocationModalMediaGallery({
   handleSwipeStart,
   handleSwipeMove,
   handleSwipeEnd,
+  handleSwipeCancel,
   handleWheelSwipe,
   pointerMovedRef,
 
@@ -130,6 +131,7 @@ export default function LocationModalMediaGallery({
                 onTouchStart={handleSwipeStart}
                 onTouchMove={handleSwipeMove}
                 onTouchEnd={handleSwipeEnd}
+                onTouchCancel={handleSwipeCancel}
                 onWheel={handleWheelSwipe}
               >
                 <img
@@ -181,6 +183,7 @@ export default function LocationModalMediaGallery({
                 onTouchStart={handleSwipeStart}
                 onTouchMove={handleSwipeMove}
                 onTouchEnd={handleSwipeEnd}
+                onTouchCancel={handleSwipeCancel}
                 onWheel={handleWheelSwipe}
                 onClick={() => {
                   if (pointerMovedRef.current) return;

@@ -1127,14 +1127,21 @@ function LocationModal({
   const touchStartRef = useRef(null);
   const touchLockRef = useRef(null); // 'h' = horizontal locked, 'v' = vertical
 
+  const resetTouchState = () => {
+    touchStartRef.current = null;
+    touchLockRef.current = null;
+    swipeHandledRef.current = false;
+  };
+
   const handleSwipeStart = (e) => {
+    // always reset so a cancelled previous gesture never poisons the next one
+    resetTouchState();
+
     if (!mediaItems || mediaItems.length < 2) return;
 
     const t = e.touches?.[0];
     if (!t) return;
 
-    swipeHandledRef.current = false;
-    touchLockRef.current = null;
     touchStartRef.current = { x: t.clientX, y: t.clientY };
   };
 
@@ -1155,16 +1162,23 @@ function LocationModal({
   };
 
   const handleSwipeEnd = (e) => {
-    if (!mediaItems || mediaItems.length < 2) return;
-    if (swipeHandledRef.current) return; // guard against double-fire
+    if (swipeHandledRef.current) return; // guard against double-fire within one gesture
+    if (!mediaItems || mediaItems.length < 2) {
+      resetTouchState();
+      return;
+    }
 
     const start = touchStartRef.current;
+    const lock = touchLockRef.current;
+
+    // clear before any early returns so state is clean for the next gesture
     touchStartRef.current = null;
+    touchLockRef.current = null;
 
     const t = e.changedTouches?.[0];
     if (!start || !t) return;
 
-    if (touchLockRef.current === 'v') return; // vertical scroll — ignore
+    if (lock === 'v') return; // vertical scroll intent — ignore
 
     const dx = t.clientX - start.x;
     const dy = t.clientY - start.y;
@@ -1178,8 +1192,13 @@ function LocationModal({
     swipeHandledRef.current = true;
     pointerMovedRef.current = true;
 
+    // clamp: max one step in either direction
     if (dx < 0) goNext();
     else goPrev();
+  };
+
+  const handleSwipeCancel = () => {
+    resetTouchState();
   };
 
   // ✅ Trackpad / wheel swipe (desktop) — zodat je NIET hoeft te klikken
@@ -2251,6 +2270,7 @@ function LocationModal({
               handleSwipeStart={handleSwipeStart}
               handleSwipeMove={handleSwipeMove}
               handleSwipeEnd={handleSwipeEnd}
+              handleSwipeCancel={handleSwipeCancel}
               handleWheelSwipe={handleWheelSwipe}
               pointerMovedRef={pointerMovedRef}
               mediaFrameStyle={mediaFrameStyle}
