@@ -15128,26 +15128,26 @@ export default function App() {
           // kaart/hero blijft description_short gebruiken:
           description:
             language === 'nl'
-              ? row.description_short_nl || row.description_short || ''
+              ? row.description_short || row.description_short_nl || ''
               : row.description_short_en ||
-                row.description_short_nl ||
                 row.description_short ||
+                row.description_short_nl ||
                 '',
 
           description_short:
             language === 'nl'
-              ? row.description_short_nl || row.description_short || ''
+              ? row.description_short || row.description_short_nl || ''
               : row.description_short_en ||
-                row.description_short_nl ||
                 row.description_short ||
+                row.description_short_nl ||
                 '',
 
           description_long:
             language === 'nl'
-              ? row.description_long_nl || row.description_long || null
+              ? row.description_long || row.description_long_nl || null
               : row.description_long_en ||
-                row.description_long_nl ||
                 row.description_long ||
+                row.description_long_nl ||
                 null,
           address: row.address,
           lat: row.lat,
