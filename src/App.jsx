@@ -17132,6 +17132,76 @@ function AccountPage({
         </div>
       </div>
 
+      <div style={sectionLabel}>
+        {language === 'nl' ? 'Favorieten' : 'Favorites'}
+      </div>
+      <div style={listWrap}>
+        <button
+          type="button"
+          style={rowBtn}
+          onClick={() =>
+            setOpenKey((p) => (p === 'favorites' ? null : 'favorites'))
+          }
+        >
+          <div style={rowLeft}>
+            <div style={iconPill}>♡</div>
+            <div style={rowTexts}>
+              <div style={rowTitle}>
+                {language === 'nl' ? 'Jouw favorieten' : 'Your favorites'}
+              </div>
+              <div style={rowValue}>
+                {favoritesLoading
+                  ? language === 'nl'
+                    ? 'Laden…'
+                    : 'Loading…'
+                  : `${favList.length} ${
+                      language === 'nl' ? 'items' : 'items'
+                    }`}
+              </div>
+            </div>
+          </div>
+          <div style={chevron}>{openKey === 'favorites' ? '×' : '›'}</div>
+        </button>
+
+        {openKey === 'favorites' ? (
+          <div style={{ padding: '0 10px 12px 10px' }}>
+            {favoritesLoading ? (
+              <div style={{ padding: 10, color: THEME.muted, fontSize: 13 }}>
+                {language === 'nl' ? 'Favorieten laden…' : 'Loading favorites…'}
+              </div>
+            ) : favList.length === 0 ? (
+              <div style={{ padding: 10, color: THEME.muted, fontSize: 13 }}>
+                {language === 'nl'
+                  ? 'Nog geen favorieten. Sla locaties op met het hartje.'
+                  : 'No favorites yet. Save places with the heart.'}
+              </div>
+            ) : (
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr', // ✅ altijd 1 kolom (ook op desktop)
+                  gap: 14,
+                  paddingTop: 12,
+                  width: '100%', // ✅ vult het witte vlak
+                  maxWidth: '100%', // ✅ geen desktop maxWidth
+                  margin: 0, // ✅ niet centreren in smaller vlak
+                  alignItems: 'stretch',
+                }}
+              >
+                {favList.map((loc) => (
+                  <CategoryResultRowCard
+                    key={loc.id || loc.name}
+                    loc={loc}
+                    language={language}
+                    onClick={(picked) => onOpenLocation(picked)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        ) : null}
+      </div>
+
       {/* ================== MIJN REVIEWS ================== */}
       <div style={{ marginTop: 12 }}>
         <button
@@ -17311,82 +17381,12 @@ function AccountPage({
                         }}
                       >
                         {language === 'nl'
-                          ? 'Tip: open het event en klik daar op ‘Bewerk’ bij jouw review.'
-                          : 'Tip: open the event and click ‘Edit’ on your review there.'}
+                          ? "Tip: open het event en klik daar op \u2018Bewerk\u2019 bij jouw review."
+                          : "Tip: open the event and click \u2018Edit\u2019 on your review there."}
                       </div>
                     </div>
                   );
                 })}
-              </div>
-            )}
-          </div>
-        ) : null}
-      </div>
-
-      <div style={sectionLabel}>
-        {language === 'nl' ? 'Favorieten' : 'Favorites'}
-      </div>
-      <div style={listWrap}>
-        <button
-          type="button"
-          style={rowBtn}
-          onClick={() =>
-            setOpenKey((p) => (p === 'favorites' ? null : 'favorites'))
-          }
-        >
-          <div style={rowLeft}>
-            <div style={iconPill}>♡</div>
-            <div style={rowTexts}>
-              <div style={rowTitle}>
-                {language === 'nl' ? 'Jouw favorieten' : 'Your favorites'}
-              </div>
-              <div style={rowValue}>
-                {favoritesLoading
-                  ? language === 'nl'
-                    ? 'Laden…'
-                    : 'Loading…'
-                  : `${favList.length} ${
-                      language === 'nl' ? 'items' : 'items'
-                    }`}
-              </div>
-            </div>
-          </div>
-          <div style={chevron}>{openKey === 'favorites' ? '×' : '›'}</div>
-        </button>
-
-        {openKey === 'favorites' ? (
-          <div style={{ padding: '0 10px 12px 10px' }}>
-            {favoritesLoading ? (
-              <div style={{ padding: 10, color: THEME.muted, fontSize: 13 }}>
-                {language === 'nl' ? 'Favorieten laden…' : 'Loading favorites…'}
-              </div>
-            ) : favList.length === 0 ? (
-              <div style={{ padding: 10, color: THEME.muted, fontSize: 13 }}>
-                {language === 'nl'
-                  ? 'Nog geen favorieten. Sla locaties op met het hartje.'
-                  : 'No favorites yet. Save places with the heart.'}
-              </div>
-            ) : (
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr', // ✅ altijd 1 kolom (ook op desktop)
-                  gap: 14,
-                  paddingTop: 12,
-                  width: '100%', // ✅ vult het witte vlak
-                  maxWidth: '100%', // ✅ geen desktop maxWidth
-                  margin: 0, // ✅ niet centreren in smaller vlak
-                  alignItems: 'stretch',
-                }}
-              >
-                {favList.map((loc) => (
-                  <CategoryResultRowCard
-                    key={loc.id || loc.name}
-                    loc={loc}
-                    language={language}
-                    onClick={(picked) => onOpenLocation(picked)}
-                  />
-                ))}
               </div>
             )}
           </div>
