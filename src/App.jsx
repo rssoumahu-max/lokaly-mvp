@@ -262,6 +262,66 @@ const LOCATIONS = [
   },
 ];
 
+/* ===================== DESCRIPTION CLAMP ===================== */
+function DescriptionClamp({ text, isMobile, expanded, onToggle, style, language }) {
+  const pRef = useRef(null);
+  const [isClamped, setIsClamped] = useState(false);
+  const clampLines = isMobile ? 2 : 3;
+
+  useEffect(() => {
+    const el = pRef.current;
+    if (!el) return;
+    setIsClamped(el.scrollHeight > el.clientHeight + 1);
+  }, [text, clampLines]);
+
+  return (
+    <div style={{ margin: '4px 0 0 0' }}>
+      <p
+        ref={pRef}
+        style={{
+          ...style,
+          margin: 0,
+          overflow: 'hidden',
+          display: '-webkit-box',
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: expanded ? 'unset' : clampLines,
+        }}
+      >
+        {text}
+      </p>
+      {(isClamped || expanded) && (
+        <button
+          type="button"
+          onClick={onToggle}
+          style={{
+            display: 'block',
+            marginTop: 4,
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+            fontFamily: style.fontFamily,
+            fontSize: isMobile ? 13 : 13.5,
+            fontWeight: 400,
+            color: 'rgba(225,230,240,0.46)',
+            textDecoration: 'underline',
+            textDecorationColor: 'rgba(225,230,240,0.22)',
+            textUnderlineOffset: '2px',
+            lineHeight: 1.5,
+            transition: 'color 0.15s',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = 'rgba(225,230,240,0.72)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(225,230,240,0.46)'; }}
+        >
+          {expanded
+            ? (language === 'nl' ? 'Minder tonen' : 'Show less')
+            : (language === 'nl' ? 'Meer lezen' : 'Read more')}
+        </button>
+      )}
+    </div>
+  );
+}
+
 /* ===================== MODAL ===================== */
 function LocationModal({
   location,
@@ -2330,56 +2390,16 @@ function LocationModal({
           </div>
 
           {/* ✅ Korte beschrijving exact onder labels, zelfde left start */}
-          {detailDesc ? (() => {
-            const sentenceLimit = isMobile ? 2 : 3;
-            const sentences = detailDesc.match(/[^.!?]+[.!?]+[\s]*/g) || [detailDesc];
-            const needsCollapse = sentences.length > sentenceLimit;
-            const collapsed = needsCollapse && !descExpanded;
-            const visibleText = collapsed
-              ? sentences.slice(0, sentenceLimit).join('').trimEnd()
-              : detailDesc;
-
-            return (
-              <div style={{ margin: '4px 0 0 0', marginLeft: 0, paddingLeft: 0 }}>
-                <p style={{ ...detailDescStyle, margin: 0, display: 'inline' }}>
-                  {visibleText}
-                  {collapsed && (
-                    <span style={{ color: 'rgba(225,230,240,0.38)', fontStyle: 'normal' }}>…</span>
-                  )}
-                </p>
-                {needsCollapse && (
-                  <button
-                    type="button"
-                    onClick={() => setDescExpanded((v) => !v)}
-                    style={{
-                      display: 'inline',
-                      marginLeft: 7,
-                      background: 'none',
-                      border: 'none',
-                      padding: 0,
-                      cursor: 'pointer',
-                      fontFamily: THEME.font,
-                      fontSize: isMobile ? 13 : 13.5,
-                      fontWeight: 400,
-                      color: 'rgba(225,230,240,0.46)',
-                      textDecoration: 'underline',
-                      textDecorationColor: 'rgba(225,230,240,0.22)',
-                      textUnderlineOffset: '2px',
-                      lineHeight: 1.5,
-                      letterSpacing: 0,
-                      transition: 'color 0.15s',
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.color = 'rgba(225,230,240,0.72)'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(225,230,240,0.46)'; }}
-                  >
-                    {descExpanded
-                      ? (language === 'nl' ? 'Minder tonen' : 'Show less')
-                      : (language === 'nl' ? 'Meer lezen' : 'Read more')}
-                  </button>
-                )}
-              </div>
-            );
-          })() : null}
+          {detailDesc ? (
+            <DescriptionClamp
+              text={detailDesc}
+              isMobile={isMobile}
+              expanded={descExpanded}
+              onToggle={() => setDescExpanded((v) => !v)}
+              style={detailDescStyle}
+              language={language}
+            />
+          ) : null}
         </div>
 
         {!!location.website && (
