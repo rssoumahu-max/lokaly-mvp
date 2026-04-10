@@ -161,41 +161,11 @@ export function IconShare({ size = 16, color = THEME.muted }) {
       aria-hidden="true"
       style={{ display: 'block' }}
     >
-      <path
-        d="M16 8a3 3 0 1 0-2.83-4"
-        stroke={color}
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M8 12a3 3 0 1 0 0 6"
-        stroke={color}
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M16 16a3 3 0 1 0 0 6"
-        stroke={color}
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M10.7 13.2l2.6 1.6"
-        stroke={color}
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M13.3 9.2l-2.6 1.6"
-        stroke={color}
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <circle cx="17.5" cy="5.5" r="2.5" stroke={color} strokeWidth="1.8" />
+      <circle cx="6.5" cy="12" r="2.5" stroke={color} strokeWidth="1.8" />
+      <circle cx="17.5" cy="18.5" r="2.5" stroke={color} strokeWidth="1.8" />
+      <line x1="8.8" y1="10.9" x2="15.2" y2="6.6" stroke={color} strokeWidth="1.8" strokeLinecap="round" />
+      <line x1="8.8" y1="13.1" x2="15.2" y2="17.4" stroke={color} strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
