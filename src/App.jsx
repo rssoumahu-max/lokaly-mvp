@@ -1061,13 +1061,14 @@ function LocationModal({
   // ✅ SWIPE/DRAG support (mobiel + desktop) zonder eerst te klikken
   const pointerStartRef = useRef(null);
   const pointerMovedRef = useRef(false);
+  const swipeHandledRef = useRef(false); // prevents double-fire between pointer and touch handlers
 
   const handlePointerDown = (e) => {
     if (!mediaItems || mediaItems.length < 2) return;
-
-    // alleen primary button (voorkom right click)
+    if (e.pointerType === 'touch') return; // touch events handled by handleSwipeStart/End
     if (e.pointerType === 'mouse' && e.button !== 0) return;
 
+    swipeHandledRef.current = false;
     pointerMovedRef.current = false;
     pointerStartRef.current = { x: e.clientX, y: e.clientY };
 
@@ -1077,19 +1078,20 @@ function LocationModal({
   };
 
   const handlePointerMove = (e) => {
+    if (e.pointerType === 'touch') return;
     const start = pointerStartRef.current;
     if (!start) return;
 
     const dx = e.clientX - start.x;
     const dy = e.clientY - start.y;
 
-    // kleine “move” detectie zodat click ≠ swipe
     if (Math.abs(dx) > 8 || Math.abs(dy) > 8) {
       pointerMovedRef.current = true;
     }
   };
 
   const handlePointerUp = (e) => {
+    if (e.pointerType === 'touch') return; // touch events handled by handleSwipeEnd
     if (!mediaItems || mediaItems.length < 2) return;
 
     const start = pointerStartRef.current;
@@ -1102,16 +1104,13 @@ function LocationModal({
     const absX = Math.abs(dx);
     const absY = Math.abs(dy);
 
-    // ✅ Als het (bijna) geen beweging was: behandel dit als "click/tap"
-    // en open direct de lightbox (dit lost jouw multi-image click probleem op)
     if (!pointerMovedRef.current && absX < 8 && absY < 8) {
       openLightbox();
       return;
     }
 
-    // swipe detectie
     if (absX < 45) return;
-    if (absX < absY * 1.2) return;
+    if (absX < absY * 1.5) return;
 
     pointerMovedRef.current = true;
 
@@ -1119,7 +1118,8 @@ function LocationModal({
     else goPrev();
   };
 
-  const handlePointerCancel = () => {
+  const handlePointerCancel = (e) => {
+    if (e.pointerType === 'touch') return;
     pointerStartRef.current = null;
   };
 
@@ -1133,6 +1133,7 @@ function LocationModal({
     const t = e.touches?.[0];
     if (!t) return;
 
+    swipeHandledRef.current = false;
     touchLockRef.current = null;
     touchStartRef.current = { x: t.clientX, y: t.clientY };
   };
@@ -1151,13 +1152,11 @@ function LocationModal({
       if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
       touchLockRef.current = Math.abs(dx) > Math.abs(dy) ? 'h' : 'v';
     }
-
-    // geen preventDefault meer nodig;
-    // touchAction op de wrapper regelt het scrollgedrag
   };
 
   const handleSwipeEnd = (e) => {
     if (!mediaItems || mediaItems.length < 2) return;
+    if (swipeHandledRef.current) return; // guard against double-fire
 
     const start = touchStartRef.current;
     touchStartRef.current = null;
@@ -1165,16 +1164,18 @@ function LocationModal({
     const t = e.changedTouches?.[0];
     if (!start || !t) return;
 
+    if (touchLockRef.current === 'v') return; // vertical scroll — ignore
+
     const dx = t.clientX - start.x;
     const dy = t.clientY - start.y;
 
     const absX = Math.abs(dx);
     const absY = Math.abs(dy);
 
-    // alleen horizontaal
-    if (absX < 45) return;
-    if (absX < absY * 1.2) return;
+    if (absX < 40) return;
+    if (absX < absY * 1.5) return;
 
+    swipeHandledRef.current = true;
     pointerMovedRef.current = true;
 
     if (dx < 0) goNext();
