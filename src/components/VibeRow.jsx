@@ -286,10 +286,10 @@ export default function VibeRow({ title, onVibeSelect, onSeeAll, vibes, language
   // ✅ EXACT dezelfde sectie-titel look als je andere secties
   const titleStyle = {
     fontFamily: THEME.fontDisplay,
-    fontSize: isMobile ? 16 : 18,
-    fontWeight: 400,
-    color: 'rgba(235,240,255,0.88)',
-    letterSpacing: 0.1,
+    fontSize: isMobile ? 20 : 23,
+    fontWeight: 500,
+    color: 'rgba(235,240,255,0.92)',
+    letterSpacing: -0.1,
     margin: 0,
     lineHeight: 1.15,
     whiteSpace: 'nowrap',
@@ -380,13 +380,11 @@ export default function VibeRow({ title, onVibeSelect, onSeeAll, vibes, language
     margin: 0,
     cursor: 'pointer',
 
-    // ✅ feller / leesbaarder
     color: 'rgba(235,240,255,0.92)',
 
-    // ✅ dunner zoals rest van homepage
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: 400,
-    letterSpacing: 0.15,
+    letterSpacing: 0.1,
 
     display: 'inline-flex',
     alignItems: 'center',
@@ -397,7 +395,7 @@ export default function VibeRow({ title, onVibeSelect, onSeeAll, vibes, language
   };
 
   const chevron = {
-    fontSize: 16,
+    fontSize: 17,
     lineHeight: 1,
     opacity: 0.75,
     transform: 'translateY(-0.5px)',

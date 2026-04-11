@@ -122,11 +122,11 @@ export default function HeroCard({ location, onOpen, language }) {
     const titleStyle = {
       margin: 0,
       fontFamily: THEME.fontDisplay,
-      fontSize: 18,
+      fontSize: 22,
       fontWeight: 500,
-      letterSpacing: -0.2,
-      lineHeight: 1.15,
-      color: 'rgba(235,240,255,0.88)',
+      letterSpacing: -0.3,
+      lineHeight: 1.12,
+      color: 'rgba(235,240,255,0.92)',
       textShadow: '0 10px 22px rgba(0,0,0,0.35)',
       display: '-webkit-box',
       WebkitLineClamp: 2,
@@ -211,8 +211,6 @@ export default function HeroCard({ location, onOpen, language }) {
           decoding="async"
         />
 
-        <div style={pill}>{t.featured}</div>
-
         <div style={bottomDock}>
           <h2 style={titleStyle}>{location?.name}</h2>
 
@@ -250,11 +248,11 @@ export default function HeroCard({ location, onOpen, language }) {
   const titleStyleDesktop = {
     margin: 0,
     fontFamily: THEME.fontDisplay,
-    fontSize: 34,
-    lineHeight: 1.05,
+    fontSize: 42,
+    lineHeight: 1.04,
     fontWeight: 500,
-    letterSpacing: -0.2,
-    color: 'rgba(235,240,255,0.88)',
+    letterSpacing: -0.4,
+    color: 'rgba(235,240,255,0.92)',
     textShadow: '0 18px 36px rgba(0,0,0,0.45)',
   };
 
@@ -312,8 +310,6 @@ export default function HeroCard({ location, onOpen, language }) {
         fetchPriority="high"
         decoding="async"
       />
-
-      <div style={pill}>{t.featured}</div>
 
       <div style={contentWrap}>
         <h1 style={titleStyleDesktop}>{location?.name}</h1>
