@@ -56,27 +56,20 @@ export default function LocationCard({
 
   const touchActionValue = 'auto';
 
-  // ✅ iPhone scroll-klik fix: alleen “echte taps” openen de kaart
-  const touchRef = React.useRef({ x: 0, y: 0, moved: false });
+  const touchRef = React.useRef({ x: 0, y: 0, t: 0, moved: false });
 
   const onTouchStartGuard = (e) => {
-    const t = e.touches?.[0];
-    if (!t) return;
-    touchRef.current = { x: t.clientX, y: t.clientY, moved: false };
+    const touch = e.touches?.[0];
+    if (!touch) return;
+    touchRef.current = { x: touch.clientX, y: touch.clientY, t: Date.now(), moved: false };
   };
 
   const onTouchMoveGuard = (e) => {
-    const t = e.touches?.[0];
-    if (!t) return;
-    const dx = Math.abs(t.clientX - touchRef.current.x);
-    const dy = Math.abs(t.clientY - touchRef.current.y);
-
-    // Duidelijke drempel: alleen als beweging > 10px EN horizontaal > verticaal
-    if (dx > 10 && dx > dy * 1.5) {
-      touchRef.current.moved = true;
-    } else if (dy > 10 && dy > dx * 1.5) {
-      touchRef.current.moved = true;
-    } else if (dx > 15 || dy > 15) {
+    const touch = e.touches?.[0];
+    if (!touch) return;
+    const dx = Math.abs(touch.clientX - touchRef.current.x);
+    const dy = Math.abs(touch.clientY - touchRef.current.y);
+    if (dx > 6 || dy > 6) {
       touchRef.current.moved = true;
     }
   };

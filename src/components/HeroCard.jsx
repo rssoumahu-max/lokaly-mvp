@@ -26,6 +26,29 @@ export default function HeroCard({ location, onOpen, language }) {
   const isMobile = useIsMobile();
   const [isHovered, setIsHovered] = React.useState(false);
 
+  const touchRef = React.useRef({ x: 0, y: 0, moved: false });
+
+  const onTouchStartGuard = (e) => {
+    const touch = e.touches?.[0];
+    if (!touch) return;
+    touchRef.current = { x: touch.clientX, y: touch.clientY, moved: false };
+  };
+
+  const onTouchMoveGuard = (e) => {
+    const touch = e.touches?.[0];
+    if (!touch) return;
+    const dx = Math.abs(touch.clientX - touchRef.current.x);
+    const dy = Math.abs(touch.clientY - touchRef.current.y);
+    if (dx > 6 || dy > 6) {
+      touchRef.current.moved = true;
+    }
+  };
+
+  const safeOpen = () => {
+    if (touchRef.current.moved) return;
+    if (typeof onOpen === 'function') onOpen(location);
+  };
+
   if (!location) return null;
 
   const districtName =
@@ -198,7 +221,9 @@ export default function HeroCard({ location, onOpen, language }) {
     return (
       <div
         style={{ ...heroCard, height: mobileHeight }}
-        onClick={onOpen}
+        onClick={safeOpen}
+        onTouchStart={onTouchStartGuard}
+        onTouchMove={onTouchMoveGuard}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -298,7 +323,9 @@ export default function HeroCard({ location, onOpen, language }) {
   return (
     <div
       style={{ ...heroCard, height: desktopHeight }}
-      onClick={onOpen}
+      onClick={safeOpen}
+      onTouchStart={onTouchStartGuard}
+      onTouchMove={onTouchMoveGuard}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

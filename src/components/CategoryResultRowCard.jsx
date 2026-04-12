@@ -23,6 +23,29 @@ function getLocalizedName(nameValue, language) {
 export default function CategoryResultRowCard({ loc, onClick, language }) {
   const isMobile = useIsMobile();
 
+  const touchRef = React.useRef({ x: 0, y: 0, moved: false });
+
+  const onTouchStartGuard = (e) => {
+    const touch = e.touches?.[0];
+    if (!touch) return;
+    touchRef.current = { x: touch.clientX, y: touch.clientY, moved: false };
+  };
+
+  const onTouchMoveGuard = (e) => {
+    const touch = e.touches?.[0];
+    if (!touch) return;
+    const dx = Math.abs(touch.clientX - touchRef.current.x);
+    const dy = Math.abs(touch.clientY - touchRef.current.y);
+    if (dx > 6 || dy > 6) {
+      touchRef.current.moved = true;
+    }
+  };
+
+  const safeClick = () => {
+    if (touchRef.current.moved) return;
+    if (typeof onClick === 'function') onClick(loc);
+  };
+
   const title = loc?.name || '';
   const desc =
     loc?.shortDescription ||
@@ -188,7 +211,13 @@ export default function CategoryResultRowCard({ loc, onClick, language }) {
   });
 
   return (
-    <button type="button" style={cardBtn} onClick={() => onClick?.(loc)}>
+    <button
+      type="button"
+      style={cardBtn}
+      onClick={safeClick}
+      onTouchStart={onTouchStartGuard}
+      onTouchMove={onTouchMoveGuard}
+    >
       <div style={row}>
         <div style={thumb}>
           {img ? (
