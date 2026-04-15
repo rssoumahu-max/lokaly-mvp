@@ -157,25 +157,6 @@ export default function VibeRow({ title, onVibeSelect, onSeeAll, vibes, language
     return { a, b, tag: 'VIBE' };
   };
 
-  // ✅ Vibe → zoekterm voor image (rechts)
-  const vibeQueryForSlug = (slug) => {
-    const s = String(slug || '').toLowerCase();
-    const map = {
-      all: 'amsterdam,city,explore',
-      'met-vrienden': 'friends,city,hangout',
-      adrenaline: 'adventure,action,sports',
-      cultureel: 'museum,art,architecture',
-      teambuilding: 'team,activity,escape-room',
-      chillen: 'coffee,park,relax',
-      gamers: 'gaming,arcade,neon',
-      romantisch: 'romantic,date,lights',
-      'avondje-uit': 'nightlife,bar,city',
-      budget: 'streetfood,market,city',
-      actief: 'outdoor,fitness,bike',
-    };
-    return map[s] || 'amsterdam,experience';
-  };
-
   // ✅ Subtitle per vibe (vervangt "Ontdek →")
   const vibeTaglineForSlug = (slugOrName) => {
     const raw = String(slugOrName || '')
@@ -197,14 +178,6 @@ export default function VibeRow({ title, onVibeSelect, onSeeAll, vibes, language
     };
 
     return map[raw] || map[key] || 'Ontdek jouw vibe';
-  };
-
-  const imageForVibe = (slug) => {
-    const q = vibeQueryForSlug(slug);
-    const sig = hashString(slug || q) % 50; // stabieler per vibe
-    return `https://source.unsplash.com/featured/640x480/?${encodeURIComponent(
-      q
-    )}&sig=${sig}`;
   };
 
   // ---------- Layout / scroll ----------
@@ -503,10 +476,8 @@ export default function VibeRow({ title, onVibeSelect, onSeeAll, vibes, language
                 nameLower === 'alle vibes' ||
                 nameLower === 'all vibes';
 
-              // ✅ Alleen andere kaarten krijgen een image
-              const img = !isAllVibesCard
-                ? v.imageUrl || imageForVibe(v.slug || v.name)
-                : null;
+              // ✅ Alleen andere kaarten krijgen een image (alleen echte URL, geen fallback)
+              const img = !isAllVibesCard ? v.imageUrl || null : null;
 
               // ✅ Tekstkleur (Alle vibes = donkerder, rest = wit)
               const titleColor = isAllVibesCard
