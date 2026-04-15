@@ -4662,19 +4662,19 @@ function CategoryPage({
 
   const titleText = hasSpecificCategory
     ? language === 'nl'
-      ? `Locaties in categorie ${selectedCategory.name}`
-      : `Locations in category ${selectedCategory.name}`
+      ? `Locaties in ontdek ${selectedCategory.name}`
+      : `Locations in discover ${selectedCategory.name}`
     : language === 'nl'
     ? 'Alle locaties'
     : 'All locations';
 
   const subtitleText = hasSpecificCategory
     ? language === 'nl'
-      ? 'Filter op vibe om je perfecte volgende uitje te vinden.'
-      : 'Filter by vibe to find your next perfect outing.'
+      ? 'Filter op inspiratie om je perfecte volgende uitje te vinden.'
+      : 'Filter by inspiration to find your next perfect outing.'
     : language === 'nl'
-    ? 'Filter op vibe en categorie om je perfecte volgende uitje te vinden.'
-    : 'Filter by vibe and category to find your next perfect outing.';
+    ? 'Filter op inspiratie en ontdek om je perfecte volgende uitje te vinden.'
+    : 'Filter by inspiration and discover to find your next perfect outing.';
 
   const titleStyle = {
     margin: 0,
@@ -5389,7 +5389,7 @@ function CategoryPage({
               ←
             </span>
             <span>
-              {language === 'nl' ? 'Terug naar vibes' : 'Back to vibes'}
+              {language === 'nl' ? 'Terug naar inspiratie' : 'Back to inspiration'}
             </span>
           </div>
 
@@ -5404,7 +5404,7 @@ function CategoryPage({
         {/* Top row: label + acties */}
         <div style={filtersTopRowStyle}>
           <div style={miniLabelStyle}>
-            {language === 'nl' ? 'Categorieën' : 'Categories'}
+            {language === 'nl' ? 'Ontdek' : 'Discover'}
           </div>
 
           <div style={actionRowStyle}>
@@ -5448,7 +5448,7 @@ function CategoryPage({
             }}
           >
             <span>
-              {language === 'nl' ? 'Alle categorieën' : 'All categories'}
+              {language === 'nl' ? 'Alle ontdek' : 'All discover'}
             </span>
           </button>
 
@@ -5532,7 +5532,7 @@ function CategoryPage({
                   setPage(1);
                 }}
               >
-                <span>{language === 'nl' ? 'Alle vibes' : 'All vibes'}</span>
+                <span>{language === 'nl' ? 'Alle inspiratie' : 'All inspiration'}</span>
               </button>
 
               {sourceVibes
@@ -5978,19 +5978,19 @@ function VibePage({
 
   const titleText = hasSpecificCategory
     ? language === 'nl'
-      ? `Locaties in categorie ${selectedCategory.name}`
-      : `Locations in category ${selectedCategory.name}`
+      ? `Locaties in ontdek ${selectedCategory.name}`
+      : `Locations in discover ${selectedCategory.name}`
     : language === 'nl'
     ? 'Alle locaties'
     : 'All locations';
 
   const subtitleText = hasSpecificCategory
     ? language === 'nl'
-      ? 'Filter op vibe om je perfecte volgende uitje te vinden.'
-      : 'Filter by vibe to find your next perfect outing.'
+      ? 'Filter op inspiratie om je perfecte volgende uitje te vinden.'
+      : 'Filter by inspiration to find your next perfect outing.'
     : language === 'nl'
-    ? 'Filter op vibe en categorie om je perfecte volgende uitje te vinden.'
-    : 'Filter by vibe and category to find your next perfect outing.';
+    ? 'Filter op inspiratie en ontdek om je perfecte volgende uitje te vinden.'
+    : 'Filter by inspiration and discover to find your next perfect outing.';
 
   const titleStyle = {
     margin: 0,
@@ -6622,12 +6622,12 @@ function VibePage({
         <section style={ovSectionStyle}>
           <header style={ovHeaderStyle}>
             <h1 style={ovTitleStyle}>
-              {language === 'nl' ? 'Vibes' : 'Vibes'}
+              {language === 'nl' ? 'Inspiratie' : 'Inspiration'}
             </h1>
             <div style={ovSubStyle}>
               {language === 'nl'
-                ? 'Browse door alle vibes en ontdek wat past bij jouw mood.'
-                : 'Browse all vibes and discover what fits your mood.'}
+                ? 'Browse door alle inspiratie en ontdek wat past bij jouw mood.'
+                : 'Browse all inspiration and discover what fits your mood.'}
             </div>
           </header>
 
@@ -6746,8 +6746,8 @@ function VibePage({
             </span>
             <span>
               {language === 'nl'
-                ? 'Terug naar categorieën'
-                : 'Back to categories'}
+                ? 'Terug naar ontdek'
+                : 'Back to discover'}
             </span>
           </div>
 
@@ -6764,7 +6764,7 @@ function VibePage({
         {/* Top row: label + acties */}
         <div style={filtersTopRowStyle}>
           <div style={miniLabelStyle}>
-            {language === 'nl' ? 'Categorieën' : 'Categories'}
+            {language === 'nl' ? 'Ontdek' : 'Discover'}
           </div>
 
           <div style={actionRowStyle}>
@@ -6808,7 +6808,7 @@ function VibePage({
             }}
           >
             <span>
-              {language === 'nl' ? 'Alle categorieën' : 'All categories'}
+              {language === 'nl' ? 'Alle ontdek' : 'All discover'}
             </span>
           </button>
 
@@ -6892,7 +6892,7 @@ function VibePage({
                   setPage(1);
                 }}
               >
-                <span>{language === 'nl' ? 'Alle vibes' : 'All vibes'}</span>
+                <span>{language === 'nl' ? 'Alle inspiratie' : 'All inspiration'}</span>
               </button>
 
               {sourceVibes
@@ -12547,7 +12547,7 @@ const STATIC_PAGES = {
           h: 'Onze missie',
           p: [
             'Lokaly maakt het makkelijker om de juiste activiteit te vinden, zonder eindeloos zoeken tussen losse websites en onduidelijke lijstjes.',
-            'We focussen op helderheid, kwaliteit en relevantie: kort, betrouwbaar en passend bij jouw vibe.',
+            'We focussen op helderheid, kwaliteit en relevantie: kort, betrouwbaar en passend bij jouw inspiratie.',
           ],
         },
         {
@@ -12574,9 +12574,9 @@ const STATIC_PAGES = {
         'Lokaly is ontworpen om in seconden te filteren naar iets dat écht bij je past.',
       sections: [
         {
-          h: '1) Ontdek via vibes en categorieën',
+          h: '1) Ontdek via inspiratie en ontdek',
           p: [
-            'Kies een vibe (bijv. ‘Cultureel’, ‘Romantisch’, ‘Teambuilding’) of ga direct naar een categorie.',
+            'Kies een inspiratie (bijv. \u2018Cultureel\u2019, \u2018Romantisch\u2019, \u2018Teambuilding\u2019) of ga direct naar ontdek.',
             'Je krijgt een selectie die logisch is opgebouwd: snel scannen, snel kiezen.',
           ],
         },
@@ -12606,7 +12606,7 @@ const STATIC_PAGES = {
         {
           h: 'Wat je kunt verwachten',
           p: [
-            'Een professionele presentatie (titel, korte beschrijving, vibe/categorie, locatiegegevens).',
+            'Een professionele presentatie (titel, korte beschrijving, inspiratie/ontdek, locatiegegevens).',
             'Een duidelijke route voor bezoekers: ontdekking → detail → doorklik naar jouw website/boekingspagina.',
           ],
         },
@@ -12787,9 +12787,9 @@ const STATIC_PAGES = {
         'Lokaly is built to get you from ‘what should we do?’ to a solid plan in seconds.',
       sections: [
         {
-          h: '1) Discover via vibes and categories',
+          h: '1) Discover via inspiration and discover',
           p: [
-            'Pick a vibe (e.g. Culture, Romantic, Team-building) or jump into a category.',
+            'Pick an inspiration (e.g. Culture, Romantic, Team-building) or jump into discover.',
             'You’ll see a clean selection you can scan quickly.',
           ],
         },
@@ -12819,7 +12819,7 @@ const STATIC_PAGES = {
         {
           h: 'What you get',
           p: [
-            'A professional listing (title, short description, vibe/category, location details).',
+            'A professional listing (title, short description, inspiration/discover, location details).',
             'A clear user journey: discovery → details → click-through to your website/booking page.',
           ],
         },
