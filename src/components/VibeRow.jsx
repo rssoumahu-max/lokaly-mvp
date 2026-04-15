@@ -3,7 +3,6 @@ import { THEME } from '../constants/theme';
 import { STRINGS } from '../constants/strings';
 import { VIBES } from '../constants/vibes';
 import { useIsMobile } from '../hooks/useIsMobile';
-import { supabaseImgUrl } from '../lib/locationHelpers';
 
 export default function VibeRow({ title, onVibeSelect, onSeeAll, vibes, language = 'nl' }) {
   const t = STRINGS[language];
@@ -478,7 +477,7 @@ export default function VibeRow({ title, onVibeSelect, onSeeAll, vibes, language
                 nameLower === 'all vibes';
 
               // ✅ Alleen andere kaarten krijgen een image (alleen echte URL, geen fallback)
-              const img = !isAllVibesCard ? supabaseImgUrl(v.imageUrl, 240) : null;
+              const img = !isAllVibesCard ? v.imageUrl || null : null;
 
               // ✅ Tekstkleur (Alle vibes = donkerder, rest = wit)
               const titleColor = isAllVibesCard

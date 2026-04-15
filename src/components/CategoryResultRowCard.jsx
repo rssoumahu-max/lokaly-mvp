@@ -4,7 +4,6 @@ import { STRINGS } from '../constants/strings';
 import { CATEGORIES } from '../constants/categories';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { RenderStars, IconPin } from './icons';
-import { supabaseImgUrl } from '../lib/locationHelpers';
 
 // Helper functie om de juiste naam te kiezen op basis van taal
 function getLocalizedName(nameValue, language) {
@@ -56,7 +55,7 @@ export default function CategoryResultRowCard({ loc, onClick, language }) {
     loc?.description ||
     '';
 
-  const img = supabaseImgUrl(loc?.mainImage || loc?.imageUrl || loc?.cover_url || '', 160);
+  const img = loc?.mainImage || loc?.imageUrl || loc?.cover_url || '';
 
   const district =
     loc?.districtName ||
