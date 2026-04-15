@@ -71,3 +71,5 @@ export default defineConfig([
   },
 ])
 ```
+
+GitHub sync test after reimport
