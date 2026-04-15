@@ -4,6 +4,7 @@ import { STRINGS } from '../constants/strings';
 import { CATEGORIES } from '../constants/categories';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { IconPin } from './icons';
+import { supabaseImgUrl } from '../lib/locationHelpers';
 
 // Helper functie om de juiste naam te kiezen op basis van taal
 function getLocalizedName(nameValue, language) {
@@ -228,7 +229,7 @@ export default function HeroCard({ location, onOpen, language }) {
         onMouseLeave={() => setIsHovered(false)}
       >
         <img
-          src={location?.mainImage || location?.imageUrl || FALLBACK_IMAGE}
+          src={supabaseImgUrl(location?.mainImage || location?.imageUrl, 800) || FALLBACK_IMAGE}
           alt={location?.name || ''}
           style={heroImg}
           loading="eager"
@@ -330,7 +331,7 @@ export default function HeroCard({ location, onOpen, language }) {
       onMouseLeave={() => setIsHovered(false)}
     >
       <img
-        src={location?.mainImage || location?.imageUrl || FALLBACK_IMAGE}
+        src={supabaseImgUrl(location?.mainImage || location?.imageUrl, 1400) || FALLBACK_IMAGE}
         alt={location?.name || ''}
         style={heroImg}
         loading="eager"

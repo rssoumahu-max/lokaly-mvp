@@ -1,3 +1,13 @@
+// ===================== IMAGE TRANSFORM HELPER =====================
+const SUPABASE_STORAGE = 'supabase.co/storage/v1/object/public/';
+const SUPABASE_RENDER  = 'supabase.co/storage/v1/render/image/public/';
+
+export function supabaseImgUrl(url, width, quality = 80) {
+  if (!url || !url.includes(SUPABASE_STORAGE)) return url || null;
+  return url.replace(SUPABASE_STORAGE, SUPABASE_RENDER)
+    + `?width=${width}&quality=${quality}`;
+}
+
 // ===================== PRICE HELPERS (GLOBAL) =====================
 const formatEuro = (v) => `€${Math.round(Number(v))}`;
 
