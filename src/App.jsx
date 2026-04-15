@@ -4673,8 +4673,8 @@ function CategoryPage({
       ? 'Filter op inspiratie om je perfecte volgende uitje te vinden.'
       : 'Filter by inspiration to find your next perfect outing.'
     : language === 'nl'
-    ? 'Filter op inspiratie en ontdek om je perfecte volgende uitje te vinden.'
-    : 'Filter by inspiration and discover to find your next perfect outing.';
+    ? 'Filter op inspiratie en ontdek wat past bij je volgende uitje.'
+    : 'Filter by inspiration and discover what fits your next outing.';
 
   const titleStyle = {
     margin: 0,
@@ -5389,7 +5389,7 @@ function CategoryPage({
               ←
             </span>
             <span>
-              {language === 'nl' ? 'Terug naar inspiratie' : 'Back to inspiration'}
+              {language === 'nl' ? 'Terug naar Inspiratie' : 'Back to Inspiration'}
             </span>
           </div>
 
@@ -5448,7 +5448,7 @@ function CategoryPage({
             }}
           >
             <span>
-              {language === 'nl' ? 'Alle ontdek' : 'All discover'}
+              {language === 'nl' ? 'Alles bekijken' : 'View all'}
             </span>
           </button>
 
@@ -5532,7 +5532,7 @@ function CategoryPage({
                   setPage(1);
                 }}
               >
-                <span>{language === 'nl' ? 'Alle inspiratie' : 'All inspiration'}</span>
+                <span>{language === 'nl' ? 'Alles bekijken' : 'View all'}</span>
               </button>
 
               {sourceVibes
@@ -5989,8 +5989,8 @@ function VibePage({
       ? 'Filter op inspiratie om je perfecte volgende uitje te vinden.'
       : 'Filter by inspiration to find your next perfect outing.'
     : language === 'nl'
-    ? 'Filter op inspiratie en ontdek om je perfecte volgende uitje te vinden.'
-    : 'Filter by inspiration and discover to find your next perfect outing.';
+    ? 'Filter op inspiratie en ontdek wat past bij je volgende uitje.'
+    : 'Filter by inspiration and discover what fits your next outing.';
 
   const titleStyle = {
     margin: 0,
@@ -6626,8 +6626,8 @@ function VibePage({
             </h1>
             <div style={ovSubStyle}>
               {language === 'nl'
-                ? 'Browse door alle inspiratie en ontdek wat past bij jouw mood.'
-                : 'Browse all inspiration and discover what fits your mood.'}
+                ? 'Laat je inspireren en vind wat past bij jouw mood.'
+                : 'Get inspired and find what fits your mood.'}
             </div>
           </header>
 
@@ -6746,8 +6746,8 @@ function VibePage({
             </span>
             <span>
               {language === 'nl'
-                ? 'Terug naar ontdek'
-                : 'Back to discover'}
+                ? 'Terug naar Ontdek'
+                : 'Back to Discover'}
             </span>
           </div>
 
@@ -6808,7 +6808,7 @@ function VibePage({
             }}
           >
             <span>
-              {language === 'nl' ? 'Alle ontdek' : 'All discover'}
+              {language === 'nl' ? 'Alles bekijken' : 'View all'}
             </span>
           </button>
 
@@ -6892,7 +6892,7 @@ function VibePage({
                   setPage(1);
                 }}
               >
-                <span>{language === 'nl' ? 'Alle inspiratie' : 'All inspiration'}</span>
+                <span>{language === 'nl' ? 'Alles bekijken' : 'View all'}</span>
               </button>
 
               {sourceVibes
