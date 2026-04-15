@@ -4167,7 +4167,6 @@ function HomePage({
         onCardClick={onLocationClick}
         isTop10Section
         language={language}
-        onSeeAll={onSeeAllCategory}
         favoriteIds={favoriteIds}
         onToggleFavorite={onToggleFavorite}
         loading={locationsLoading}
@@ -4177,7 +4176,6 @@ function HomePage({
         locations={popularToShow}
         onCardClick={onLocationClick}
         language={language}
-        onSeeAll={onSeeAllCategory}
         favoriteIds={favoriteIds}
         onToggleFavorite={onToggleFavorite}
         loading={locationsLoading}
@@ -4189,7 +4187,6 @@ function HomePage({
           locations={romanticLocations}
           onCardClick={onLocationClick}
           language={language}
-          onSeeAll={onSeeAllCategory}
           favoriteIds={favoriteIds}
           onToggleFavorite={onToggleFavorite}
           loading={locationsLoading}
@@ -4201,7 +4198,6 @@ function HomePage({
           locations={centerLocations}
           onCardClick={onLocationClick}
           language={language}
-          onSeeAll={onSeeAllCategory}
           favoriteIds={favoriteIds}
           onToggleFavorite={onToggleFavorite}
           loading={locationsLoading}
