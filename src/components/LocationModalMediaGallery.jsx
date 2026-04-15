@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
 export default function LocationModalMediaGallery({
   language,
@@ -40,11 +40,64 @@ export default function LocationModalMediaGallery({
   lightboxCloseStyle,
   lightboxNavStyle,
   lightboxMediaStyle,
+  isMobile,
 }) {
+  const lbTouchStartRef = useRef(null);
+  const lbTouchLockRef = useRef(null);
+
+  const handleLbSwipeStart = (e) => {
+    if (!mediaItems || mediaItems.length < 2) return;
+    const t = e.touches?.[0];
+    if (!t) return;
+    lbTouchStartRef.current = { x: t.clientX, y: t.clientY };
+    lbTouchLockRef.current = null;
+  };
+
+  const handleLbSwipeMove = (e) => {
+    if (!mediaItems || mediaItems.length < 2) return;
+    const start = lbTouchStartRef.current;
+    const t = e.touches?.[0];
+    if (!start || !t) return;
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (!lbTouchLockRef.current) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      lbTouchLockRef.current = Math.abs(dx) > Math.abs(dy) ? 'h' : 'v';
+    }
+    if (lbTouchLockRef.current === 'h') {
+      e.preventDefault();
+    }
+  };
+
+  const handleLbSwipeEnd = (e) => {
+    if (!mediaItems || mediaItems.length < 2) return;
+    const start = lbTouchStartRef.current;
+    const lock = lbTouchLockRef.current;
+    lbTouchStartRef.current = null;
+    lbTouchLockRef.current = null;
+    const t = e.changedTouches?.[0];
+    if (!start || !t) return;
+    if (lock === 'v') return;
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) < 40) return;
+    if (Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    if (dx < 0) goNext();
+    else goPrev();
+  };
+
+  const lbDotsRowStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: 7,
+    padding: '10px 0 12px',
+    pointerEvents: 'none',
+  };
+
   return (
     <>
       <div style={mediaFrameStyle}>
-        {!mediaLoading && mediaItems.length > 1 && (
+        {!mediaLoading && mediaItems.length > 1 && !isMobile && (
           <>
             <button
               type="button"
@@ -216,15 +269,21 @@ export default function LocationModalMediaGallery({
                 <div
                   style={{
                     ...lightboxInnerStyle,
-                    touchAction: 'pan-y',
+                    touchAction: isMobile ? 'pan-y' : 'auto',
                     userSelect: 'none',
+                    display: 'flex',
+                    flexDirection: 'column',
                   }}
                   onClick={(e) => e.stopPropagation()}
-                  onPointerDown={handlePointerDown}
-                  onPointerMove={handlePointerMove}
-                  onPointerUp={handlePointerUp}
-                  onPointerCancel={handlePointerCancel}
+                  onPointerDown={!isMobile ? handlePointerDown : undefined}
+                  onPointerMove={!isMobile ? handlePointerMove : undefined}
+                  onPointerUp={!isMobile ? handlePointerUp : undefined}
+                  onPointerCancel={!isMobile ? handlePointerCancel : undefined}
                   onWheel={handleWheelSwipe}
+                  onTouchStart={isMobile ? handleLbSwipeStart : undefined}
+                  onTouchMove={isMobile ? handleLbSwipeMove : undefined}
+                  onTouchEnd={isMobile ? handleLbSwipeEnd : undefined}
+                  onTouchCancel={isMobile ? () => { lbTouchStartRef.current = null; lbTouchLockRef.current = null; } : undefined}
                 >
                   <button
                     type="button"
@@ -240,7 +299,7 @@ export default function LocationModalMediaGallery({
                     ×
                   </button>
 
-                  {mediaItems.length > 1 && (
+                  {mediaItems.length > 1 && !isMobile && (
                     <>
                       <button
                         type="button"
@@ -290,6 +349,24 @@ export default function LocationModalMediaGallery({
                       onDragStart={(e) => e.preventDefault()}
                       onClick={(e) => e.stopPropagation()}
                     />
+                  )}
+
+                  {mediaItems.length > 1 && (
+                    <div style={lbDotsRowStyle} aria-hidden="true">
+                      {mediaItems.map((item, i) => (
+                        <span
+                          key={item.id || i}
+                          style={{
+                            width: i === activeIndex ? 16 : 7,
+                            height: 7,
+                            borderRadius: 999,
+                            background: i === activeIndex ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.35)',
+                            boxShadow: i === activeIndex ? '0 10px 24px rgba(0,0,0,0.22)' : 'none',
+                            transition: 'all 160ms ease',
+                          }}
+                        />
+                      ))}
+                    </div>
                   )}
                 </div>
               </div>

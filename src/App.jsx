@@ -1418,39 +1418,39 @@ function LocationModal({
 
   const lightboxOverlayStyle = {
     position: 'fixed',
-    inset: 0, // ✅ overlay loopt tot bovenaan (donker tot aan navbar)
+    inset: 0,
 
     zIndex: 2000,
     background: 'rgba(2,6,23,0.92)',
     backdropFilter: 'blur(6px)',
 
     display: 'flex',
-    alignItems: 'center',
+    alignItems: isMobile ? 'center' : 'center',
     justifyContent: 'center',
 
-    // ✅ duw de lightbox content onder de navbar,
-    // maar de DONKERE overlay blijft wel helemaal doorlopen tot boven
-    paddingTop: NAV_H + 16,
-    paddingRight: 16,
-    paddingBottom: 16,
-    paddingLeft: 16,
+    paddingTop: isMobile ? NAV_H + 8 : NAV_H + 16,
+    paddingRight: isMobile ? 0 : 16,
+    paddingBottom: isMobile ? 8 : 16,
+    paddingLeft: isMobile ? 0 : 16,
   };
 
   const lightboxInnerStyle = {
     position: 'relative',
-    width: 'min(1000px, 96vw)',
-    maxHeight: '90vh',
-    borderRadius: 16,
+    width: isMobile ? '100%' : 'min(1000px, 96vw)',
+    maxHeight: isMobile ? `calc(100vh - ${NAV_H + 16}px)` : '90vh',
+    borderRadius: isMobile ? 0 : 16,
     overflow: 'hidden',
-    border: '1px solid rgba(148,163,184,0.18)',
-    boxShadow: '0 30px 70px rgba(0,0,0,0.75)',
+    border: isMobile ? 'none' : '1px solid rgba(148,163,184,0.18)',
+    boxShadow: isMobile ? 'none' : '0 30px 70px rgba(0,0,0,0.75)',
     background: 'rgba(15,23,42,0.6)',
   };
 
   const lightboxMediaStyle = {
     width: '100%',
     height: 'auto',
-    maxHeight: `calc(100vh - ${70 + 16 + 16}px)`, // NAV_H + paddingTop + paddingBottom
+    maxHeight: isMobile
+      ? `calc(100vh - ${NAV_H + 16 + 40}px)`
+      : `calc(100vh - ${70 + 16 + 16}px)`,
     objectFit: 'contain',
     display: 'block',
     background: THEME.surface,
@@ -2349,6 +2349,7 @@ function LocationModal({
               lightboxCloseStyle={lightboxCloseStyle}
               lightboxNavStyle={lightboxNavStyle}
               lightboxMediaStyle={lightboxMediaStyle}
+              isMobile={isMobile}
             />
           </div>
         </div>
